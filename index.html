@@ -1,504 +1,97 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>PinVision — AI Inspiration</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet"
-    >
-
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#060914" />
+  <meta name="description" content="Atharv Bulkunde — Computer Engineering Student & Developer. Premium futuristic developer portfolio." />
+  <title>ATHARV. — Developer Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
+  <div id="loader" class="loader"><div class="loader-core"><div class="loader-logo">ATHARV<span>.</span></div><div class="loader-caption">LOADING EXPERIENCE...</div><div class="loader-track"><span id="loaderBar"></span></div><strong id="loaderPercent">0%</strong></div></div>
+  <div class="noise"></div><div class="aurora aurora-a"></div><div class="aurora aurora-b"></div><div class="orb orb-a"></div><div class="orb orb-b"></div><div class="orb orb-c"></div>
+  <div class="grid-bg"></div><canvas id="particles"></canvas><div id="mouseGlow"></div>
+  <div class="cursor-dot"></div><div class="cursor-ring"></div>
+  <div class="scroll-progress"><span id="progressBar"></span></div>
 
-<!-- =========================================
-     NAVBAR
-========================================= -->
-
-<header class="navbar">
-
-    <div class="brand">
-        <div class="brand-mark">P</div>
-        <span>Pin<span>Vision</span></span>
-    </div>
-
-    <div class="search-box">
-
-        <span>⌕</span>
-
-        <input
-            id="searchInput"
-            type="text"
-            placeholder="Search ideas..."
-        >
-
-        <kbd>⌘ K</kbd>
-
-    </div>
-
-    <nav>
-
-        <a class="active" href="#home">
-            Home
-        </a>
-
-        <a href="#explore">
-            Explore
-        </a>
-
-        <a href="#create">
-            Create
-        </a>
-
+  <header class="nav-wrap" id="top">
+    <nav class="navbar glass">
+      <a class="logo magnetic" href="#home">ATHARV<span>.</span></a>
+      <button class="menu-btn" id="menuBtn" aria-label="Open menu"><span></span><span></span><span></span></button>
+      <div class="nav-links" id="navLinks">
+        <a class="nav-link active" href="#home">Home</a><a class="nav-link" href="#about">About</a><a class="nav-link" href="#skills">Skills</a><a class="nav-link" href="#projects">Projects</a><a class="nav-link" href="#journey">Experience</a><a class="nav-link" href="#certificates">Certificates</a><a class="nav-link" href="#contact">Contact</a>
+      </div>
+      <button class="theme-toggle magnetic" id="themeToggle" aria-label="Toggle theme"><span>☼</span></button>
     </nav>
+  </header>
 
-    <button
-        class="create-nav"
-        id="openCreate"
-    >
-        + Create
-    </button>
-
-    <div class="avatar">
-        A
-    </div>
-
-</header>
-
-
-<!-- =========================================
-     CATEGORY BAR
-========================================= -->
-
-<div class="category-bar">
-
-    <button class="category active" data-category="All">
-        All
-    </button>
-
-    <button class="category" data-category="Anime">
-        Anime
-    </button>
-
-    <button class="category" data-category="Nature">
-        Nature
-    </button>
-
-    <button class="category" data-category="Architecture">
-        Architecture
-    </button>
-
-    <button class="category" data-category="Fashion">
-        Fashion
-    </button>
-
-    <button class="category" data-category="Cars">
-        Cars
-    </button>
-
-    <button class="category" data-category="Space">
-        Space
-    </button>
-
-    <button class="category" data-category="Gaming">
-        Gaming
-    </button>
-
-</div>
-
-
-<!-- =========================================
-     MAIN
-========================================= -->
-
-<main id="home">
-
-    <!-- HERO -->
-
-    <section class="hero">
-
-        <div class="hero-copy">
-
-            <span class="eyebrow">
-                ✦ AI VISUAL DISCOVERY
-            </span>
-
-            <h1>
-                Find your next
-                <span>idea.</span>
-            </h1>
-
-            <p>
-                Discover beautiful visual inspiration
-                or create something completely new with AI.
-            </p>
-
-            <div class="hero-actions">
-
-                <button
-                    class="primary-btn"
-                    id="heroCreate"
-                >
-                    ✦ Create with AI
-                </button>
-
-                <button
-                    class="secondary-btn"
-                    onclick="document.getElementById('feed').scrollIntoView({behavior:'smooth'})"
-                >
-                    Explore ideas
-                </button>
-
-            </div>
-
+  <main>
+    <section class="hero section" id="home">
+      <div class="container hero-grid">
+        <div class="hero-copy reveal">
+          <div class="status"><i></i> AVAILABLE FOR OPPORTUNITIES</div>
+          <p class="eyebrow">COMPUTER ENGINEERING · NASHIK · INDIA</p>
+          <h1>Hi, I'm <span>Atharv.</span><br /><em>I build digital experiences.</em></h1>
+          <div class="role-line">I'm a <span id="typing"></span><b class="caret">|</b></div>
+          <p class="hero-text">Computer Engineering student focused on building elegant interfaces, practical software and interactive web experiences with a futuristic visual edge.</p>
+          <div class="hero-actions"><a href="#projects" class="btn btn-primary magnetic">Explore My Work <span>↗</span></a><a href="resume.pdf" class="btn btn-ghost magnetic" download>Download Resume <span>↓</span></a></div>
+          <div class="social-row"><a class="social magnetic" href="https://github.com/AtharvBulkunde" target="_blank" rel="noreferrer">GH</a><a class="social magnetic" href="https://www.linkedin.com/" target="_blank" rel="noreferrer">in</a><a class="social magnetic" href="mailto:atharv@example.com">@</a><a class="social magnetic" href="https://instagram.com/" target="_blank" rel="noreferrer">ig</a></div>
         </div>
-
-        <div class="hero-art">
-
-            <div class="hero-card card-a">
-                <img
-                    src="https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=700&q=80"
-                    alt="Mountain landscape"
-                >
-            </div>
-
-            <div class="hero-card card-b">
-                <img
-                    src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=700&q=80"
-                    alt="Landscape"
-                >
-            </div>
-
-            <div class="hero-card card-c">
-                <img
-                    src="https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=700&q=80"
-                    alt="Architecture"
-                >
-            </div>
-
+        <div class="profile-stage reveal reveal-right">
+          <div class="orbit orbit-1"></div><div class="orbit orbit-2"></div><div class="orbit orbit-3"></div>
+          <div class="profile-card tilt glass" data-tilt>
+            <div class="profile-shine"></div><div class="profile-avatar"><div class="avatar-glow"></div><div class="avatar-initial">AB</div></div>
+            <div class="profile-meta"><span>01 / 04</span><span>CREATIVE DEVELOPER</span></div>
+            <div class="profile-name">Atharv Bulkunde</div><div class="profile-sub">Code · Design · Curiosity</div>
+          </div>
+          <div class="float-card float-1 glass">⌘ <span>Frontend<br><b>Developer</b></span></div>
+          <div class="float-card float-2 glass">☕ <span>Java /<br><b>SQL</b></span></div>
+          <div class="float-card float-3 glass">✦ <span>UI<br><b>Designer</b></span></div>
+          <div class="float-card float-4 glass">◈ <span>Problem<br><b>Solver</b></span></div>
         </div>
-
+      </div>
+      <div class="scroll-hint"><span></span> SCROLL TO EXPLORE</div>
     </section>
 
-
-    <!-- FEED HEADER -->
-
-    <section class="feed-section" id="explore">
-
-        <div class="feed-header">
-
-            <div>
-                <span class="small-label">
-                    TRENDING NOW
-                </span>
-
-                <h2>
-                    Inspiration for you
-                </h2>
-            </div>
-
-            <button
-                class="filter-btn"
-                id="randomizeBtn"
-            >
-                ⤨ Shuffle
-            </button>
-
-        </div>
-
-
-        <!-- MASONRY FEED -->
-
-        <div
-            class="masonry"
-            id="feed"
-        ></div>
-
-    </section>
-
-
-    <!-- CREATE PANEL -->
-
-    <section
-        class="create-section"
-        id="create"
-    >
-
-        <div class="create-panel">
-
-            <div class="create-icon">
-                ✦
-            </div>
-
-            <div class="create-content">
-
-                <span class="small-label">
-                    AI CREATOR
-                </span>
-
-                <h2>
-                    Turn a thought into a visual.
-                </h2>
-
-                <p>
-                    Describe anything you imagine and
-                    create your own image.
-                </p>
-
-            </div>
-
-            <button
-                class="primary-btn"
-                id="createPanelBtn"
-            >
-                Create image →
-            </button>
-
-        </div>
-
-    </section>
-
-</main>
-
-
-<!-- =========================================
-     CREATE MODAL
-========================================= -->
-
-<div
-    class="modal hidden"
-    id="createModal"
->
-
-    <div class="modal-backdrop"></div>
-
-    <div class="modal-window">
-
-        <button
-            class="close-modal"
-            id="closeModal"
-        >
-            ×
-        </button>
-
-        <div class="modal-header">
-
-            <span class="eyebrow">
-                ✦ AI CREATOR
-            </span>
-
-            <h2>
-                Create your image
-            </h2>
-
-            <p>
-                Describe what you want to see.
-            </p>
-
-        </div>
-
-
-        <label>
-            Your prompt
-        </label>
-
-        <textarea
-            id="promptInput"
-            maxlength="1000"
-            placeholder="A futuristic Mumbai skyline at night, cinematic lighting, neon reflections..."
-        ></textarea>
-
-        <div class="counter">
-            <span id="counter">
-                0 / 1000
-            </span>
-        </div>
-
-
-        <div class="options">
-
-            <div>
-
-                <label>
-                    Style
-                </label>
-
-                <select id="styleSelect">
-
-                    <option value="cinematic">
-                        Cinematic
-                    </option>
-
-                    <option value="realistic">
-                        Photorealistic
-                    </option>
-
-                    <option value="anime">
-                        Anime
-                    </option>
-
-                    <option value="digital">
-                        Digital Art
-                    </option>
-
-                    <option value="3d">
-                        3D
-                    </option>
-
-                    <option value="fantasy">
-                        Fantasy
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <div>
-
-                <label>
-                    Ratio
-                </label>
-
-                <select id="ratioSelect">
-
-                    <option value="square">
-                        1:1
-                    </option>
-
-                    <option value="portrait">
-                        2:3
-                    </option>
-
-                    <option value="landscape">
-                        3:2
-                    </option>
-
-                </select>
-
-            </div>
-
-        </div>
-
-
-        <button
-            class="generate-btn"
-            id="generateBtn"
-        >
-            ✦ Generate image
-        </button>
-
-        <p class="secure-note">
-            🔒 API keys should remain on a secure server.
-        </p>
-
-    </div>
-
-</div>
-
-
-<!-- =========================================
-     IMAGE VIEWER
-========================================= -->
-
-<div
-    class="viewer hidden"
-    id="viewer"
->
-
-    <div
-        class="viewer-backdrop"
-        id="viewerBackdrop"
-    ></div>
-
-    <div class="viewer-window">
-
-        <button
-            class="viewer-close"
-            id="viewerClose"
-        >
-            ×
-        </button>
-
-        <img
-            id="viewerImage"
-            src=""
-            alt="Preview"
-        >
-
-        <div class="viewer-info">
-
-            <div>
-
-                <span class="small-label">
-                    SAVED IDEA
-                </span>
-
-                <h3 id="viewerTitle">
-                    Image
-                </h3>
-
-            </div>
-
-            <button
-                class="save-btn large"
-                id="viewerSave"
-            >
-                ♡ Save
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- =========================================
-     TOAST
-========================================= -->
-
-<div
-    class="toast"
-    id="toast"
->
-    <span>✓</span>
-    <p id="toastText">
-        Saved
-    </p>
-</div>
-
-
-<footer>
-
-    <div class="brand">
-
-        <div class="brand-mark">
-            P
-        </div>
-
-        <span>
-            Pin<span>Vision</span>
-        </span>
-
-    </div>
-
-    <p>
-        AI-powered visual inspiration.
-    </p>
-
-</footer>
-
-
-<script src="script.js"></script>
-
+    <section class="section about" id="about"><div class="container">
+      <div class="section-head reveal"><p class="eyebrow">01 · ABOUT</p><h2>More than code.<br /><span>A mindset for building.</span></h2></div>
+      <div class="about-grid">
+        <div class="about-visual reveal reveal-left"><div class="about-image glass tilt" data-tilt><div class="scanline"></div><div class="monogram">A<span>.</span></div><div class="image-caption">ENGINEERING / DESIGN / AI</div></div></div>
+        <div class="about-copy reveal reveal-right"><p>I’m <strong>Atharv Bulkunde</strong>, a Computer Engineering student who enjoys turning ideas into polished, useful digital products. I blend frontend development, programming fundamentals and visual design to create experiences that feel as good as they work.</p><div class="info-chips"><span>🎓 Engineering</span><span>⌘ Developer</span><span>◉ UI Explorer</span><span>✦ AI Curious</span></div><div class="stats"><div class="stat"><b data-count="10">0</b><span>Projects+</span></div><div class="stat"><b data-count="8">0</b><span>Technologies+</span></div><div class="stat"><b data-count="6">0</b><span>Certificates+</span></div><div class="stat"><b data-count="100">0</b><span>% Curiosity</span></div></div></div>
+      </div>
+    </div></section>
+
+    <section class="section skills" id="skills"><div class="container"><div class="section-head reveal"><p class="eyebrow">02 · SKILLS</p><h2>Tools I use to turn<br /><span>ideas into interfaces.</span></h2></div><div class="skill-grid">
+      <article class="skill-card glass tilt reveal" data-tilt><div class="skill-icon">⌘</div><h3>Frontend</h3><p>Modern interfaces with responsive layouts and smooth interaction.</p><div class="skill-list"><span>HTML</span><span>CSS</span><span>JavaScript</span><span>React</span></div><div class="skill-meter"><i style="--w:92%"></i></div></article>
+      <article class="skill-card glass tilt reveal" data-tilt><div class="skill-icon">λ</div><h3>Programming</h3><p>Strong foundations for problem solving and application logic.</p><div class="skill-list"><span>Java</span><span>Python</span><span>C/C++</span></div><div class="skill-meter"><i style="--w:84%"></i></div></article>
+      <article class="skill-card glass tilt reveal" data-tilt><div class="skill-icon">▦</div><h3>Database</h3><p>Structured data, queries, relationships and DBMS concepts.</p><div class="skill-list"><span>SQL</span><span>MySQL</span><span>DBMS</span></div><div class="skill-meter"><i style="--w:86%"></i></div></article>
+      <article class="skill-card glass tilt reveal" data-tilt><div class="skill-icon">⌁</div><h3>Tools</h3><p>Version control and developer workflows for shipping projects.</p><div class="skill-list"><span>Git</span><span>GitHub</span><span>VS Code</span></div><div class="skill-meter"><i style="--w:90%"></i></div></article>
+      <article class="skill-card glass tilt reveal" data-tilt><div class="skill-icon">✦</div><h3>Design</h3><p>Visual systems that balance usability, hierarchy and personality.</p><div class="skill-list"><span>UI/UX</span><span>Figma</span><span>Responsive</span></div><div class="skill-meter"><i style="--w:88%"></i></div></article>
+    </div></div></section>
+
+    <section class="section projects" id="projects"><div class="container"><div class="section-head project-head reveal"><div><p class="eyebrow">03 · SELECTED WORK</p><h2>A visual archive of<br /><span>things I've built.</span></h2></div><span class="project-count">09 PROJECTS / 2026</span></div><div class="project-grid" id="projectGrid"></div></div></section>
+
+    <section class="section journey" id="journey"><div class="container"><div class="section-head reveal"><p class="eyebrow">04 · JOURNEY</p><h2>Learning by<br /><span>building & shipping.</span></h2></div><div class="timeline" id="timeline"><div class="timeline-line"><i id="timelineFill"></i></div>
+      <article class="timeline-item reveal"><div class="timeline-dot">01</div><div class="timeline-card glass"><small>EDUCATION</small><h3>Computer Engineering</h3><p>Matoshri College of Engineering · Computer Engineering · Division B</p><span>Foundation → Present</span></div></article>
+      <article class="timeline-item reveal"><div class="timeline-dot">02</div><div class="timeline-card glass"><small>PROJECTS</small><h3>From concepts to products</h3><p>Built web apps including weather dashboards, e-commerce, portfolios, quiz apps and management systems.</p><span>Build → Learn → Improve</span></div></article>
+      <article class="timeline-item reveal"><div class="timeline-dot">03</div><div class="timeline-card glass"><small>INTERNSHIPS</small><h3>Practical development</h3><p>Exploring internship opportunities and completing practical frontend/full-stack development tasks.</p><span>Experience → Growth</span></div></article>
+      <article class="timeline-item reveal"><div class="timeline-dot">04</div><div class="timeline-card glass"><small>CERTIFICATIONS</small><h3>Proof of continuous learning</h3><p>Building a portfolio of technical certificates and project-based achievements.</p><span>Learn → Validate</span></div></article>
+    </div></div></section>
+
+    <section class="section certificates" id="certificates"><div class="container"><div class="section-head reveal"><p class="eyebrow">05 · CERTIFICATES</p><h2>Learning, documented<br /><span>one milestone at a time.</span></h2></div><div class="certificate-grid" id="certificateGrid"></div></div></section>
+
+    <section class="section contact" id="contact"><div class="container"><div class="contact-card glass reveal"><div class="contact-glow"></div><p class="eyebrow">06 · CONTACT</p><h2>Let's build something<br /><span>amazing.</span></h2><p>Have an internship opportunity, project idea or collaboration in mind? Send a message and let's start a conversation.</p><div class="contact-layout"><form id="contactForm"><label><span>Name</span><input required name="name" placeholder="Your name" /></label><label><span>Email</span><input required type="email" name="email" placeholder="you@example.com" /></label><label><span>Message</span><textarea required name="message" rows="4" placeholder="Tell me about your idea..."></textarea></label><button class="btn btn-primary magnetic" type="submit" id="sendBtn">Send Message <span>↗</span></button><div class="form-status" id="formStatus"></div></form><div class="contact-side"><div class="contact-line"><span>EMAIL</span><a href="mailto:atharv@example.com">atharv@example.com</a></div><div class="contact-line"><span>GITHUB</span><a href="https://github.com/AtharvBulkunde" target="_blank" rel="noreferrer">github.com/AtharvBulkunde</a></div><div class="contact-line"><span>STATUS</span><b><i></i> Open to opportunities</b></div></div></div></div></div></section>
+  </main>
+
+  <footer><div class="footer-line"></div><div class="container footer-inner"><a class="logo" href="#home">ATHARV<span>.</span></a><p>Building ideas into digital experiences.</p><div class="footer-social"><a href="https://github.com/AtharvBulkunde" target="_blank">GitHub</a><a href="https://www.linkedin.com/" target="_blank">LinkedIn</a><a href="mailto:atharv@example.com">Email</a></div><small>© <span id="year"></span> Atharv Bulkunde. Built with curiosity.</small></div></footer>
+  <button id="backTop" class="back-top magnetic" aria-label="Back to top">↑</button>
+
+  <div class="modal" id="projectModal" aria-hidden="true"><div class="modal-backdrop"></div><div class="modal-box glass"><button class="modal-close" data-close>×</button><div id="modalContent"></div></div></div>
+  <div class="modal" id="certificateModal" aria-hidden="true"><div class="modal-backdrop"></div><div class="modal-box glass cert-modal-box"><button class="modal-close" data-close>×</button><div id="certificateContent"></div></div></div>
+  <script src="script.js"></script>
 </body>
 </html>
