@@ -1,97 +1,780 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#060914" />
-  <meta name="description" content="Atharv Bulkunde — Computer Engineering Student & Developer. Premium futuristic developer portfolio." />
-  <title>ATHARV. — Developer Portfolio</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <div id="loader" class="loader"><div class="loader-core"><div class="loader-logo">ATHARV<span>.</span></div><div class="loader-caption">LOADING EXPERIENCE...</div><div class="loader-track"><span id="loaderBar"></span></div><strong id="loaderPercent">0%</strong></div></div>
-  <div class="noise"></div><div class="aurora aurora-a"></div><div class="aurora aurora-b"></div><div class="orb orb-a"></div><div class="orb orb-b"></div><div class="orb orb-c"></div>
-  <div class="grid-bg"></div><canvas id="particles"></canvas><div id="mouseGlow"></div>
-  <div class="cursor-dot"></div><div class="cursor-ring"></div>
-  <div class="scroll-progress"><span id="progressBar"></span></div>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Atharv Bulkunde — Computer Engineering Student & Developer">
+  <title>Atharv Bulkunde | Developer Portfolio</title>
 
-  <header class="nav-wrap" id="top">
-    <nav class="navbar glass">
-      <a class="logo magnetic" href="#home">ATHARV<span>.</span></a>
-      <button class="menu-btn" id="menuBtn" aria-label="Open menu"><span></span><span></span><span></span></button>
-      <div class="nav-links" id="navLinks">
-        <a class="nav-link active" href="#home">Home</a><a class="nav-link" href="#about">About</a><a class="nav-link" href="#skills">Skills</a><a class="nav-link" href="#projects">Projects</a><a class="nav-link" href="#journey">Experience</a><a class="nav-link" href="#certificates">Certificates</a><a class="nav-link" href="#contact">Contact</a>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- CURSOR -->
+  <div class="cursor-dot"></div>
+  <div class="cursor-ring"></div>
+  <div class="mouse-glow"></div>
+
+  <!-- BACKGROUND -->
+  <div class="background">
+    <div class="aurora aurora-one"></div>
+    <div class="aurora aurora-two"></div>
+    <div class="aurora aurora-three"></div>
+    <div class="grid"></div>
+    <div id="particles"></div>
+  </div>
+
+  <!-- LOADER -->
+  <div id="loader">
+    <div class="loader-content">
+      <div class="loader-logo">ATHARV<span>.</span></div>
+      <div class="loader-text">LOADING EXPERIENCE...</div>
+
+      <div class="loader-line">
+        <div id="loader-progress"></div>
       </div>
-      <button class="theme-toggle magnetic" id="themeToggle" aria-label="Toggle theme"><span>☼</span></button>
+
+      <div id="loader-percent">0%</div>
+    </div>
+  </div>
+
+  <!-- SCROLL PROGRESS -->
+  <div class="scroll-progress">
+    <div id="progress-bar"></div>
+  </div>
+
+  <!-- NAVBAR -->
+  <header class="navbar" id="navbar">
+    <a href="#home" class="logo">ATHARV<span>.</span></a>
+
+    <nav class="nav-links">
+      <a href="#home" class="nav-link active">Home</a>
+      <a href="#about" class="nav-link">About</a>
+      <a href="#skills" class="nav-link">Skills</a>
+      <a href="#projects" class="nav-link">Projects</a>
+      <a href="#experience" class="nav-link">Experience</a>
+      <a href="#certificates" class="nav-link">Certificates</a>
+      <a href="#contact" class="nav-link">Contact</a>
     </nav>
+
+    <div class="nav-actions">
+      <button id="theme-toggle" class="icon-button" aria-label="Toggle theme">
+        ☼
+      </button>
+
+      <button id="menu-toggle" class="menu-button">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
   </header>
 
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="#home">Home</a>
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+    <a href="#projects">Projects</a>
+    <a href="#experience">Experience</a>
+    <a href="#certificates">Certificates</a>
+    <a href="#contact">Contact</a>
+  </div>
+
   <main>
-    <section class="hero section" id="home">
-      <div class="container hero-grid">
-        <div class="hero-copy reveal">
-          <div class="status"><i></i> AVAILABLE FOR OPPORTUNITIES</div>
-          <p class="eyebrow">COMPUTER ENGINEERING · NASHIK · INDIA</p>
-          <h1>Hi, I'm <span>Atharv.</span><br /><em>I build digital experiences.</em></h1>
-          <div class="role-line">I'm a <span id="typing"></span><b class="caret">|</b></div>
-          <p class="hero-text">Computer Engineering student focused on building elegant interfaces, practical software and interactive web experiences with a futuristic visual edge.</p>
-          <div class="hero-actions"><a href="#projects" class="btn btn-primary magnetic">Explore My Work <span>↗</span></a><a href="resume.pdf" class="btn btn-ghost magnetic" download>Download Resume <span>↓</span></a></div>
-          <div class="social-row"><a class="social magnetic" href="https://github.com/AtharvBulkunde" target="_blank" rel="noreferrer">GH</a><a class="social magnetic" href="https://www.linkedin.com/" target="_blank" rel="noreferrer">in</a><a class="social magnetic" href="mailto:atharv@example.com">@</a><a class="social magnetic" href="https://instagram.com/" target="_blank" rel="noreferrer">ig</a></div>
+
+    <!-- HERO -->
+    <section id="home" class="hero section">
+
+      <div class="hero-content reveal">
+
+        <div class="status-badge">
+          <span class="status-dot"></span>
+          AVAILABLE FOR OPPORTUNITIES
         </div>
-        <div class="profile-stage reveal reveal-right">
-          <div class="orbit orbit-1"></div><div class="orbit orbit-2"></div><div class="orbit orbit-3"></div>
-          <div class="profile-card tilt glass" data-tilt>
-            <div class="profile-shine"></div><div class="profile-avatar"><div class="avatar-glow"></div><div class="avatar-initial">AB</div></div>
-            <div class="profile-meta"><span>01 / 04</span><span>CREATIVE DEVELOPER</span></div>
-            <div class="profile-name">Atharv Bulkunde</div><div class="profile-sub">Code · Design · Curiosity</div>
-          </div>
-          <div class="float-card float-1 glass">⌘ <span>Frontend<br><b>Developer</b></span></div>
-          <div class="float-card float-2 glass">☕ <span>Java /<br><b>SQL</b></span></div>
-          <div class="float-card float-3 glass">✦ <span>UI<br><b>Designer</b></span></div>
-          <div class="float-card float-4 glass">◈ <span>Problem<br><b>Solver</b></span></div>
+
+        <p class="eyebrow">HELLO, WORLD 👋</p>
+
+        <h1>
+          Hi, I'm
+          <span class="gradient-text">Atharv.</span>
+        </h1>
+
+        <h2>
+          I'm a
+          <span id="typing-text"></span>
+          <span class="typing-cursor">|</span>
+        </h2>
+
+        <p class="hero-description">
+          Computer Engineering student passionate about building
+          beautiful digital experiences, intelligent applications
+          and modern web interfaces.
+        </p>
+
+        <div class="hero-buttons">
+          <a href="#projects" class="btn btn-primary magnetic">
+            Explore My Work
+            <span>↗</span>
+          </a>
+
+          <a href="#contact" class="btn btn-secondary magnetic">
+            Contact Me
+          </a>
         </div>
+
+        <div class="social-links">
+          <a href="https://github.com/" target="_blank" class="social magnetic">GH</a>
+          <a href="https://linkedin.com/" target="_blank" class="social magnetic">in</a>
+          <a href="https://instagram.com/" target="_blank" class="social magnetic">IG</a>
+          <a href="mailto:your@email.com" class="social magnetic">@</a>
+        </div>
+
       </div>
-      <div class="scroll-hint"><span></span> SCROLL TO EXPLORE</div>
+
+      <!-- PROFILE -->
+      <div class="hero-visual reveal">
+
+        <div class="orbit orbit-one"></div>
+        <div class="orbit orbit-two"></div>
+        <div class="orbit orbit-three"></div>
+
+        <div class="profile-card tilt-card">
+
+          <div class="profile-glow"></div>
+
+          <div class="profile-image">
+            <div class="profile-placeholder">
+              <span>AB</span>
+            </div>
+          </div>
+
+          <div class="profile-info">
+            <span>Computer Engineer</span>
+            <h3>Atharv Bulkunde</h3>
+            <p>Developer • Designer • Explorer</p>
+          </div>
+
+          <div class="floating-card card-one">
+            <span>⌘</span>
+            Frontend
+          </div>
+
+          <div class="floating-card card-two">
+            <span>☁</span>
+            AI Explorer
+          </div>
+
+          <div class="floating-card card-three">
+            <span>⚡</span>
+            Java / SQL
+          </div>
+
+          <div class="floating-card card-four">
+            <span>✦</span>
+            UI Designer
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="scroll-indicator">
+        <span>SCROLL TO EXPLORE</span>
+        <div class="scroll-line"></div>
+      </div>
+
     </section>
 
-    <section class="section about" id="about"><div class="container">
-      <div class="section-head reveal"><p class="eyebrow">01 · ABOUT</p><h2>More than code.<br /><span>A mindset for building.</span></h2></div>
-      <div class="about-grid">
-        <div class="about-visual reveal reveal-left"><div class="about-image glass tilt" data-tilt><div class="scanline"></div><div class="monogram">A<span>.</span></div><div class="image-caption">ENGINEERING / DESIGN / AI</div></div></div>
-        <div class="about-copy reveal reveal-right"><p>I’m <strong>Atharv Bulkunde</strong>, a Computer Engineering student who enjoys turning ideas into polished, useful digital products. I blend frontend development, programming fundamentals and visual design to create experiences that feel as good as they work.</p><div class="info-chips"><span>🎓 Engineering</span><span>⌘ Developer</span><span>◉ UI Explorer</span><span>✦ AI Curious</span></div><div class="stats"><div class="stat"><b data-count="10">0</b><span>Projects+</span></div><div class="stat"><b data-count="8">0</b><span>Technologies+</span></div><div class="stat"><b data-count="6">0</b><span>Certificates+</span></div><div class="stat"><b data-count="100">0</b><span>% Curiosity</span></div></div></div>
+
+    <!-- ABOUT -->
+    <section id="about" class="section">
+
+      <div class="section-heading reveal">
+        <span class="section-number">01</span>
+        <p>GET TO KNOW ME</p>
+        <h2>About <span>Me</span></h2>
       </div>
-    </div></section>
 
-    <section class="section skills" id="skills"><div class="container"><div class="section-head reveal"><p class="eyebrow">02 · SKILLS</p><h2>Tools I use to turn<br /><span>ideas into interfaces.</span></h2></div><div class="skill-grid">
-      <article class="skill-card glass tilt reveal" data-tilt><div class="skill-icon">⌘</div><h3>Frontend</h3><p>Modern interfaces with responsive layouts and smooth interaction.</p><div class="skill-list"><span>HTML</span><span>CSS</span><span>JavaScript</span><span>React</span></div><div class="skill-meter"><i style="--w:92%"></i></div></article>
-      <article class="skill-card glass tilt reveal" data-tilt><div class="skill-icon">λ</div><h3>Programming</h3><p>Strong foundations for problem solving and application logic.</p><div class="skill-list"><span>Java</span><span>Python</span><span>C/C++</span></div><div class="skill-meter"><i style="--w:84%"></i></div></article>
-      <article class="skill-card glass tilt reveal" data-tilt><div class="skill-icon">▦</div><h3>Database</h3><p>Structured data, queries, relationships and DBMS concepts.</p><div class="skill-list"><span>SQL</span><span>MySQL</span><span>DBMS</span></div><div class="skill-meter"><i style="--w:86%"></i></div></article>
-      <article class="skill-card glass tilt reveal" data-tilt><div class="skill-icon">⌁</div><h3>Tools</h3><p>Version control and developer workflows for shipping projects.</p><div class="skill-list"><span>Git</span><span>GitHub</span><span>VS Code</span></div><div class="skill-meter"><i style="--w:90%"></i></div></article>
-      <article class="skill-card glass tilt reveal" data-tilt><div class="skill-icon">✦</div><h3>Design</h3><p>Visual systems that balance usability, hierarchy and personality.</p><div class="skill-list"><span>UI/UX</span><span>Figma</span><span>Responsive</span></div><div class="skill-meter"><i style="--w:88%"></i></div></article>
-    </div></div></section>
+      <div class="about-grid">
 
-    <section class="section projects" id="projects"><div class="container"><div class="section-head project-head reveal"><div><p class="eyebrow">03 · SELECTED WORK</p><h2>A visual archive of<br /><span>things I've built.</span></h2></div><span class="project-count">09 PROJECTS / 2026</span></div><div class="project-grid" id="projectGrid"></div></div></section>
+        <div class="about-card glass-card reveal">
+          <div class="about-image">
+            <div class="avatar-large">AB</div>
+          </div>
 
-    <section class="section journey" id="journey"><div class="container"><div class="section-head reveal"><p class="eyebrow">04 · JOURNEY</p><h2>Learning by<br /><span>building & shipping.</span></h2></div><div class="timeline" id="timeline"><div class="timeline-line"><i id="timelineFill"></i></div>
-      <article class="timeline-item reveal"><div class="timeline-dot">01</div><div class="timeline-card glass"><small>EDUCATION</small><h3>Computer Engineering</h3><p>Matoshri College of Engineering · Computer Engineering · Division B</p><span>Foundation → Present</span></div></article>
-      <article class="timeline-item reveal"><div class="timeline-dot">02</div><div class="timeline-card glass"><small>PROJECTS</small><h3>From concepts to products</h3><p>Built web apps including weather dashboards, e-commerce, portfolios, quiz apps and management systems.</p><span>Build → Learn → Improve</span></div></article>
-      <article class="timeline-item reveal"><div class="timeline-dot">03</div><div class="timeline-card glass"><small>INTERNSHIPS</small><h3>Practical development</h3><p>Exploring internship opportunities and completing practical frontend/full-stack development tasks.</p><span>Experience → Growth</span></div></article>
-      <article class="timeline-item reveal"><div class="timeline-dot">04</div><div class="timeline-card glass"><small>CERTIFICATIONS</small><h3>Proof of continuous learning</h3><p>Building a portfolio of technical certificates and project-based achievements.</p><span>Learn → Validate</span></div></article>
-    </div></div></section>
+          <div class="about-mini-info">
+            <span>Based in</span>
+            <strong>Nashik, Maharashtra 🇮🇳</strong>
+          </div>
+        </div>
 
-    <section class="section certificates" id="certificates"><div class="container"><div class="section-head reveal"><p class="eyebrow">05 · CERTIFICATES</p><h2>Learning, documented<br /><span>one milestone at a time.</span></h2></div><div class="certificate-grid" id="certificateGrid"></div></div></section>
+        <div class="about-content reveal">
 
-    <section class="section contact" id="contact"><div class="container"><div class="contact-card glass reveal"><div class="contact-glow"></div><p class="eyebrow">06 · CONTACT</p><h2>Let's build something<br /><span>amazing.</span></h2><p>Have an internship opportunity, project idea or collaboration in mind? Send a message and let's start a conversation.</p><div class="contact-layout"><form id="contactForm"><label><span>Name</span><input required name="name" placeholder="Your name" /></label><label><span>Email</span><input required type="email" name="email" placeholder="you@example.com" /></label><label><span>Message</span><textarea required name="message" rows="4" placeholder="Tell me about your idea..."></textarea></label><button class="btn btn-primary magnetic" type="submit" id="sendBtn">Send Message <span>↗</span></button><div class="form-status" id="formStatus"></div></form><div class="contact-side"><div class="contact-line"><span>EMAIL</span><a href="mailto:atharv@example.com">atharv@example.com</a></div><div class="contact-line"><span>GITHUB</span><a href="https://github.com/AtharvBulkunde" target="_blank" rel="noreferrer">github.com/AtharvBulkunde</a></div><div class="contact-line"><span>STATUS</span><b><i></i> Open to opportunities</b></div></div></div></div></div></section>
+          <h3>
+            Turning ideas into
+            <span class="gradient-text">digital experiences.</span>
+          </h3>
+
+          <p>
+            I'm Atharv Bulkunde, a Computer Engineering student and
+            developer interested in frontend development, programming,
+            databases, UI design and emerging AI technologies.
+          </p>
+
+          <p>
+            I enjoy transforming concepts into polished applications
+            that are functional, responsive and visually engaging.
+          </p>
+
+          <div class="focus-list">
+            <div>
+              <span>01</span>
+              <strong>Current Focus</strong>
+              <p>Web Development & UI Engineering</p>
+            </div>
+
+            <div>
+              <span>02</span>
+              <strong>Learning</strong>
+              <p>Java, SQL, DBMS & AI</p>
+            </div>
+
+            <div>
+              <span>03</span>
+              <strong>Goal</strong>
+              <p>Build impactful technology</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- STATS -->
+      <div class="stats-grid reveal">
+
+        <div class="stat-card">
+          <strong data-count="10">0</strong>
+          <span>Projects</span>
+        </div>
+
+        <div class="stat-card">
+          <strong data-count="5">0</strong>
+          <span>Technologies</span>
+        </div>
+
+        <div class="stat-card">
+          <strong data-count="8">0</strong>
+          <span>Certificates</span>
+        </div>
+
+        <div class="stat-card">
+          <strong>100%</strong>
+          <span>Curiosity</span>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- SKILLS -->
+    <section id="skills" class="section">
+
+      <div class="section-heading reveal">
+        <span class="section-number">02</span>
+        <p>MY TOOLKIT</p>
+        <h2>Skills & <span>Technologies</span></h2>
+      </div>
+
+      <div class="skills-grid">
+
+        <div class="skill-card glass-card reveal">
+          <div class="skill-icon">⌘</div>
+          <h3>Frontend</h3>
+
+          <div class="skill-tags">
+            <span>HTML5</span>
+            <span>CSS3</span>
+            <span>JavaScript</span>
+            <span>React</span>
+          </div>
+
+          <div class="skill-progress">
+            <span>Frontend Development</span>
+            <strong>90%</strong>
+            <div><i style="width:90%"></i></div>
+          </div>
+        </div>
+
+        <div class="skill-card glass-card reveal">
+          <div class="skill-icon">⚙</div>
+          <h3>Programming</h3>
+
+          <div class="skill-tags">
+            <span>Java</span>
+            <span>Python</span>
+            <span>C/C++</span>
+          </div>
+
+          <div class="skill-progress">
+            <span>Programming</span>
+            <strong>82%</strong>
+            <div><i style="width:82%"></i></div>
+          </div>
+        </div>
+
+        <div class="skill-card glass-card reveal">
+          <div class="skill-icon">◈</div>
+          <h3>Database</h3>
+
+          <div class="skill-tags">
+            <span>SQL</span>
+            <span>MySQL</span>
+            <span>DBMS</span>
+          </div>
+
+          <div class="skill-progress">
+            <span>Database</span>
+            <strong>85%</strong>
+            <div><i style="width:85%"></i></div>
+          </div>
+        </div>
+
+        <div class="skill-card glass-card reveal">
+          <div class="skill-icon">✦</div>
+          <h3>Tools & Design</h3>
+
+          <div class="skill-tags">
+            <span>Git</span>
+            <span>GitHub</span>
+            <span>VS Code</span>
+            <span>Figma</span>
+            <span>UI/UX</span>
+          </div>
+
+          <div class="skill-progress">
+            <span>Tools & Design</span>
+            <strong>88%</strong>
+            <div><i style="width:88%"></i></div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- PROJECTS -->
+    <section id="projects" class="section">
+
+      <div class="section-heading reveal">
+        <span class="section-number">03</span>
+        <p>SELECTED WORK</p>
+        <h2>Featured <span>Projects</span></h2>
+      </div>
+
+      <div class="projects-grid">
+
+        <article class="project-card project-tall reveal tilt-card"
+          data-title="Weather Dashboard"
+          data-description="A responsive live weather dashboard using API integration with dynamic weather information."
+          data-tech="HTML,CSS,JavaScript,API">
+
+          <div class="project-image project-weather">
+            <span>☁</span>
+          </div>
+
+          <div class="project-content">
+            <div class="project-number">01</div>
+            <h3>Weather Dashboard</h3>
+            <p>Live weather application with API-powered data.</p>
+
+            <div class="tags">
+              <span>JavaScript</span>
+              <span>API</span>
+              <span>CSS</span>
+            </div>
+
+            <button class="view-project">View Project ↗</button>
+          </div>
+        </article>
+
+
+        <article class="project-card reveal tilt-card"
+          data-title="LUXE E-Commerce"
+          data-description="Modern premium e-commerce interface with product filtering, shopping cart and checkout preview."
+          data-tech="HTML,CSS,JavaScript">
+
+          <div class="project-image project-shop">
+            <span>◈</span>
+          </div>
+
+          <div class="project-content">
+            <div class="project-number">02</div>
+            <h3>LUXE Store</h3>
+            <p>Interactive premium e-commerce experience.</p>
+
+            <div class="tags">
+              <span>HTML</span>
+              <span>CSS</span>
+              <span>JS</span>
+            </div>
+
+            <button class="view-project">View Project ↗</button>
+          </div>
+        </article>
+
+
+        <article class="project-card project-wide reveal tilt-card"
+          data-title="AI Image Generator"
+          data-description="Futuristic image generation interface designed for AI-powered creative workflows."
+          data-tech="JavaScript,API,AI,UI">
+
+          <div class="project-image project-ai">
+            <span>✦</span>
+          </div>
+
+          <div class="project-content">
+            <div class="project-number">03</div>
+            <h3>AI Image Generator</h3>
+            <p>Creative AI generation interface.</p>
+
+            <div class="tags">
+              <span>AI</span>
+              <span>API</span>
+              <span>UI</span>
+            </div>
+
+            <button class="view-project">View Project ↗</button>
+          </div>
+        </article>
+
+
+        <article class="project-card reveal tilt-card"
+          data-title="Smart Todo"
+          data-description="Interactive task management application using DOM manipulation and LocalStorage."
+          data-tech="HTML,CSS,JavaScript,LocalStorage">
+
+          <div class="project-image project-todo">
+            <span>✓</span>
+          </div>
+
+          <div class="project-content">
+            <div class="project-number">04</div>
+            <h3>Smart Todo</h3>
+            <p>Persistent task manager with local storage.</p>
+
+            <div class="tags">
+              <span>JavaScript</span>
+              <span>LocalStorage</span>
+            </div>
+
+            <button class="view-project">View Project ↗</button>
+          </div>
+        </article>
+
+
+        <article class="project-card reveal tilt-card"
+          data-title="Bus Management System"
+          data-description="A management system project focused on routes, passengers, scheduling and risk analysis."
+          data-tech="Java,DBMS,SQL">
+
+          <div class="project-image project-bus">
+            <span>▣</span>
+          </div>
+
+          <div class="project-content">
+            <div class="project-number">05</div>
+            <h3>Bus Management</h3>
+            <p>Database-driven transportation management concept.</p>
+
+            <div class="tags">
+              <span>DBMS</span>
+              <span>SQL</span>
+              <span>Java</span>
+            </div>
+
+            <button class="view-project">View Project ↗</button>
+          </div>
+        </article>
+
+
+        <article class="project-card reveal tilt-card"
+          data-title="Music Player"
+          data-description="Glassmorphism music player interface with modern controls and responsive design."
+          data-tech="HTML,CSS,JavaScript">
+
+          <div class="project-image project-music">
+            <span>♫</span>
+          </div>
+
+          <div class="project-content">
+            <div class="project-number">06</div>
+            <h3>Music Player</h3>
+            <p>Futuristic glassmorphism music interface.</p>
+
+            <div class="tags">
+              <span>UI</span>
+              <span>JavaScript</span>
+            </div>
+
+            <button class="view-project">View Project ↗</button>
+          </div>
+        </article>
+
+      </div>
+
+    </section>
+
+
+    <!-- EXPERIENCE -->
+    <section id="experience" class="section">
+
+      <div class="section-heading reveal">
+        <span class="section-number">04</span>
+        <p>MY JOURNEY</p>
+        <h2>Experience & <span>Education</span></h2>
+      </div>
+
+      <div class="timeline">
+
+        <div class="timeline-line"></div>
+
+        <div class="timeline-item reveal">
+          <div class="timeline-dot"></div>
+
+          <div class="timeline-card">
+            <span class="timeline-date">2025 — PRESENT</span>
+            <h3>Computer Engineering</h3>
+            <h4>Matoshri College of Engineering</h4>
+            <p>
+              Building foundations in computer engineering,
+              programming, databases and software development.
+            </p>
+          </div>
+        </div>
+
+
+        <div class="timeline-item right reveal">
+          <div class="timeline-dot"></div>
+
+          <div class="timeline-card">
+            <span class="timeline-date">2026</span>
+            <h3>Web Development</h3>
+            <h4>Project Journey</h4>
+            <p>
+              Developed multiple responsive web applications
+              using HTML, CSS and JavaScript.
+            </p>
+          </div>
+        </div>
+
+
+        <div class="timeline-item reveal">
+          <div class="timeline-dot"></div>
+
+          <div class="timeline-card">
+            <span class="timeline-date">2026</span>
+            <h3>Internship Projects</h3>
+            <h4>Frontend Development</h4>
+            <p>
+              Completed practical projects including portfolios,
+              dashboards, e-commerce applications and interactive UI.
+            </p>
+          </div>
+        </div>
+
+
+        <div class="timeline-item right reveal">
+          <div class="timeline-dot"></div>
+
+          <div class="timeline-card">
+            <span class="timeline-date">ONGOING</span>
+            <h3>Continuous Learning</h3>
+            <h4>AI • Java • SQL • UI/UX</h4>
+            <p>
+              Exploring modern technologies and developing
+              production-style projects.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- CERTIFICATES -->
+    <section id="certificates" class="section">
+
+      <div class="section-heading reveal">
+        <span class="section-number">05</span>
+        <p>ACHIEVEMENTS</p>
+        <h2>My <span>Certificates</span></h2>
+      </div>
+
+      <div class="certificate-grid">
+
+        <div class="certificate-card glass-card reveal">
+          <div class="certificate-preview">
+            <span>🏆</span>
+          </div>
+
+          <div>
+            <span class="certificate-type">CERTIFICATE</span>
+            <h3>Web Development</h3>
+            <p>Frontend Development</p>
+            <button class="certificate-btn">View Certificate</button>
+          </div>
+        </div>
+
+
+        <div class="certificate-card glass-card reveal">
+          <div class="certificate-preview">
+            <span>⚡</span>
+          </div>
+
+          <div>
+            <span class="certificate-type">CERTIFICATE</span>
+            <h3>Java Programming</h3>
+            <p>Programming Fundamentals</p>
+            <button class="certificate-btn">View Certificate</button>
+          </div>
+        </div>
+
+
+        <div class="certificate-card glass-card reveal">
+          <div class="certificate-preview">
+            <span>◈</span>
+          </div>
+
+          <div>
+            <span class="certificate-type">CERTIFICATE</span>
+            <h3>SQL & DBMS</h3>
+            <p>Database Management</p>
+            <button class="certificate-btn">View Certificate</button>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- CONTACT -->
+    <section id="contact" class="section contact-section">
+
+      <div class="contact-card reveal">
+
+        <div class="contact-decoration"></div>
+
+        <span class="section-number">06</span>
+
+        <p class="eyebrow">HAVE A PROJECT?</p>
+
+        <h2>
+          Let's Build Something
+          <span class="gradient-text">Amazing.</span>
+        </h2>
+
+        <p>
+          Have an idea, internship opportunity or collaboration
+          in mind? Let's create something meaningful together.
+        </p>
+
+        <div class="contact-buttons">
+
+          <a href="mailto:your@email.com" class="btn btn-primary magnetic">
+            Send Message
+            <span>↗</span>
+          </a>
+
+          <a href="https://github.com/" target="_blank" class="btn btn-secondary magnetic">
+            GitHub
+          </a>
+
+        </div>
+
+      </div>
+
+    </section>
+
   </main>
 
-  <footer><div class="footer-line"></div><div class="container footer-inner"><a class="logo" href="#home">ATHARV<span>.</span></a><p>Building ideas into digital experiences.</p><div class="footer-social"><a href="https://github.com/AtharvBulkunde" target="_blank">GitHub</a><a href="https://www.linkedin.com/" target="_blank">LinkedIn</a><a href="mailto:atharv@example.com">Email</a></div><small>© <span id="year"></span> Atharv Bulkunde. Built with curiosity.</small></div></footer>
-  <button id="backTop" class="back-top magnetic" aria-label="Back to top">↑</button>
 
-  <div class="modal" id="projectModal" aria-hidden="true"><div class="modal-backdrop"></div><div class="modal-box glass"><button class="modal-close" data-close>×</button><div id="modalContent"></div></div></div>
-  <div class="modal" id="certificateModal" aria-hidden="true"><div class="modal-backdrop"></div><div class="modal-box glass cert-modal-box"><button class="modal-close" data-close>×</button><div id="certificateContent"></div></div></div>
+  <!-- FOOTER -->
+  <footer>
+
+    <div class="footer-glow"></div>
+
+    <div class="footer-content">
+
+      <div>
+        <div class="footer-logo">ATHARV<span>.</span></div>
+        <p>Building ideas into digital experiences.</p>
+      </div>
+
+      <div class="footer-links">
+        <a href="#home">Home</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+      </div>
+
+      <div class="footer-copy">
+        © 2026 Atharv Bulkunde
+      </div>
+
+    </div>
+
+  </footer>
+
+
+  <!-- PROJECT MODAL -->
+  <div class="modal" id="project-modal">
+
+    <div class="modal-backdrop"></div>
+
+    <div class="modal-content">
+
+      <button class="modal-close">&times;</button>
+
+      <div class="modal-visual">
+        <span id="modal-icon">✦</span>
+      </div>
+
+      <div class="modal-info">
+
+        <span class="modal-label">PROJECT</span>
+
+        <h2 id="modal-title">Project</h2>
+
+        <p id="modal-description"></p>
+
+        <div id="modal-tags" class="tags"></div>
+
+        <div class="modal-actions">
+          <a href="#" class="btn btn-primary">GitHub ↗</a>
+          <a href="#" class="btn btn-secondary">Live Demo ↗</a>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- BACK TO TOP -->
+  <button id="back-top" class="back-top">↑</button>
+
   <script src="script.js"></script>
+
 </body>
 </html>
