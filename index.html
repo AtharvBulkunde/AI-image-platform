@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PinVision — AI Inspiration</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- =========================================
+     NAVBAR
+========================================= -->
+
+<header class="navbar">
+
+    <div class="brand">
+        <div class="brand-mark">P</div>
+        <span>Pin<span>Vision</span></span>
+    </div>
+
+    <div class="search-box">
+
+        <span>⌕</span>
+
+        <input
+            id="searchInput"
+            type="text"
+            placeholder="Search ideas..."
+        >
+
+        <kbd>⌘ K</kbd>
+
+    </div>
+
+    <nav>
+
+        <a class="active" href="#home">
+            Home
+        </a>
+
+        <a href="#explore">
+            Explore
+        </a>
+
+        <a href="#create">
+            Create
+        </a>
+
+    </nav>
+
+    <button
+        class="create-nav"
+        id="openCreate"
+    >
+        + Create
+    </button>
+
+    <div class="avatar">
+        A
+    </div>
+
+</header>
+
+
+<!-- =========================================
+     CATEGORY BAR
+========================================= -->
+
+<div class="category-bar">
+
+    <button class="category active" data-category="All">
+        All
+    </button>
+
+    <button class="category" data-category="Anime">
+        Anime
+    </button>
+
+    <button class="category" data-category="Nature">
+        Nature
+    </button>
+
+    <button class="category" data-category="Architecture">
+        Architecture
+    </button>
+
+    <button class="category" data-category="Fashion">
+        Fashion
+    </button>
+
+    <button class="category" data-category="Cars">
+        Cars
+    </button>
+
+    <button class="category" data-category="Space">
+        Space
+    </button>
+
+    <button class="category" data-category="Gaming">
+        Gaming
+    </button>
+
+</div>
+
+
+<!-- =========================================
+     MAIN
+========================================= -->
+
+<main id="home">
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+        <div class="hero-copy">
+
+            <span class="eyebrow">
+                ✦ AI VISUAL DISCOVERY
+            </span>
+
+            <h1>
+                Find your next
+                <span>idea.</span>
+            </h1>
+
+            <p>
+                Discover beautiful visual inspiration
+                or create something completely new with AI.
+            </p>
+
+            <div class="hero-actions">
+
+                <button
+                    class="primary-btn"
+                    id="heroCreate"
+                >
+                    ✦ Create with AI
+                </button>
+
+                <button
+                    class="secondary-btn"
+                    onclick="document.getElementById('feed').scrollIntoView({behavior:'smooth'})"
+                >
+                    Explore ideas
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="hero-art">
+
+            <div class="hero-card card-a">
+                <img
+                    src="https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=700&q=80"
+                    alt="Mountain landscape"
+                >
+            </div>
+
+            <div class="hero-card card-b">
+                <img
+                    src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=700&q=80"
+                    alt="Landscape"
+                >
+            </div>
+
+            <div class="hero-card card-c">
+                <img
+                    src="https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=700&q=80"
+                    alt="Architecture"
+                >
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- FEED HEADER -->
+
+    <section class="feed-section" id="explore">
+
+        <div class="feed-header">
+
+            <div>
+                <span class="small-label">
+                    TRENDING NOW
+                </span>
+
+                <h2>
+                    Inspiration for you
+                </h2>
+            </div>
+
+            <button
+                class="filter-btn"
+                id="randomizeBtn"
+            >
+                ⤨ Shuffle
+            </button>
+
+        </div>
+
+
+        <!-- MASONRY FEED -->
+
+        <div
+            class="masonry"
+            id="feed"
+        ></div>
+
+    </section>
+
+
+    <!-- CREATE PANEL -->
+
+    <section
+        class="create-section"
+        id="create"
+    >
+
+        <div class="create-panel">
+
+            <div class="create-icon">
+                ✦
+            </div>
+
+            <div class="create-content">
+
+                <span class="small-label">
+                    AI CREATOR
+                </span>
+
+                <h2>
+                    Turn a thought into a visual.
+                </h2>
+
+                <p>
+                    Describe anything you imagine and
+                    create your own image.
+                </p>
+
+            </div>
+
+            <button
+                class="primary-btn"
+                id="createPanelBtn"
+            >
+                Create image →
+            </button>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- =========================================
+     CREATE MODAL
+========================================= -->
+
+<div
+    class="modal hidden"
+    id="createModal"
+>
+
+    <div class="modal-backdrop"></div>
+
+    <div class="modal-window">
+
+        <button
+            class="close-modal"
+            id="closeModal"
+        >
+            ×
+        </button>
+
+        <div class="modal-header">
+
+            <span class="eyebrow">
+                ✦ AI CREATOR
+            </span>
+
+            <h2>
+                Create your image
+            </h2>
+
+            <p>
+                Describe what you want to see.
+            </p>
+
+        </div>
+
+
+        <label>
+            Your prompt
+        </label>
+
+        <textarea
+            id="promptInput"
+            maxlength="1000"
+            placeholder="A futuristic Mumbai skyline at night, cinematic lighting, neon reflections..."
+        ></textarea>
+
+        <div class="counter">
+            <span id="counter">
+                0 / 1000
+            </span>
+        </div>
+
+
+        <div class="options">
+
+            <div>
+
+                <label>
+                    Style
+                </label>
+
+                <select id="styleSelect">
+
+                    <option value="cinematic">
+                        Cinematic
+                    </option>
+
+                    <option value="realistic">
+                        Photorealistic
+                    </option>
+
+                    <option value="anime">
+                        Anime
+                    </option>
+
+                    <option value="digital">
+                        Digital Art
+                    </option>
+
+                    <option value="3d">
+                        3D
+                    </option>
+
+                    <option value="fantasy">
+                        Fantasy
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div>
+
+                <label>
+                    Ratio
+                </label>
+
+                <select id="ratioSelect">
+
+                    <option value="square">
+                        1:1
+                    </option>
+
+                    <option value="portrait">
+                        2:3
+                    </option>
+
+                    <option value="landscape">
+                        3:2
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <button
+            class="generate-btn"
+            id="generateBtn"
+        >
+            ✦ Generate image
+        </button>
+
+        <p class="secure-note">
+            🔒 API keys should remain on a secure server.
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     IMAGE VIEWER
+========================================= -->
+
+<div
+    class="viewer hidden"
+    id="viewer"
+>
+
+    <div
+        class="viewer-backdrop"
+        id="viewerBackdrop"
+    ></div>
+
+    <div class="viewer-window">
+
+        <button
+            class="viewer-close"
+            id="viewerClose"
+        >
+            ×
+        </button>
+
+        <img
+            id="viewerImage"
+            src=""
+            alt="Preview"
+        >
+
+        <div class="viewer-info">
+
+            <div>
+
+                <span class="small-label">
+                    SAVED IDEA
+                </span>
+
+                <h3 id="viewerTitle">
+                    Image
+                </h3>
+
+            </div>
+
+            <button
+                class="save-btn large"
+                id="viewerSave"
+            >
+                ♡ Save
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     TOAST
+========================================= -->
+
+<div
+    class="toast"
+    id="toast"
+>
+    <span>✓</span>
+    <p id="toastText">
+        Saved
+    </p>
+</div>
+
+
+<footer>
+
+    <div class="brand">
+
+        <div class="brand-mark">
+            P
+        </div>
+
+        <span>
+            Pin<span>Vision</span>
+        </span>
+
+    </div>
+
+    <p>
+        AI-powered visual inspiration.
+    </p>
+
+</footer>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
