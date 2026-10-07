@@ -1,933 +1,766 @@
-"use strict";
+/* =========================================================
+   ATHARV PREMIUM PORTFOLIO
+   JAVASCRIPT
+   ========================================================= */
 
-/* =========================================
-   PINVISION
-   Pinterest-style AI image platform
-========================================= */
+document.addEventListener("DOMContentLoaded", () => {
 
+  /* =====================================================
+     LOADER
+     ===================================================== */
 
-/* =========================================
-   SAMPLE DATA
-========================================= */
+  const loader = document.getElementById("loader");
+  const loaderProgress = document.getElementById("loader-progress");
+  const loaderPercent = document.getElementById("loader-percent");
 
-const pins = [
+  let loading = 0;
 
-    {
-        id: 1,
-        category: "Nature",
-        title: "Mountain Dreams",
-        image:
-            "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=85"
-    },
+  const loaderInterval = setInterval(() => {
 
-    {
-        id: 2,
-        category: "Architecture",
-        title: "Modern Architecture",
-        image:
-            "https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=900&q=85"
-    },
+    loading += Math.floor(Math.random() * 7) + 3;
 
-    {
-        id: 3,
-        category: "Anime",
-        title: "Anime City",
-        image:
-            "https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=900&q=85"
-    },
+    if (loading >= 100) {
+      loading = 100;
+      clearInterval(loaderInterval);
 
-    {
-        id: 4,
-        category: "Cars",
-        title: "Midnight Drive",
-        image:
-            "https://images.unsplash.com/photo-1504215680853-026ed2a45def?auto=format&fit=crop&w=900&q=85"
-    },
-
-    {
-        id: 5,
-        category: "Fashion",
-        title: "Street Fashion",
-        image:
-            "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=900&q=85"
-    },
-
-    {
-        id: 6,
-        category: "Space",
-        title: "Deep Space",
-        image:
-            "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=900&q=85"
-    },
-
-    {
-        id: 7,
-        category: "Architecture",
-        title: "Minimal House",
-        image:
-            "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=85"
-    },
-
-    {
-        id: 8,
-        category: "Nature",
-        title: "Forest Escape",
-        image:
-            "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=900&q=85"
-    },
-
-    {
-        id: 9,
-        category: "Gaming",
-        title: "Gaming Setup",
-        image:
-            "https://images.unsplash.com/photo-1593305841991-05c297ba4575?auto=format&fit=crop&w=900&q=85"
-    },
-
-    {
-        id: 10,
-        category: "Anime",
-        title: "Dreamy Character",
-        image:
-            "https://images.unsplash.com/photo-1614583224978-f9a34c8e5d6c?auto=format&fit=crop&w=900&q=85"
-    },
-
-    {
-        id: 11,
-        category: "Space",
-        title: "Galaxy",
-        image:
-            "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=900&q=85"
-    },
-
-    {
-        id: 12,
-        category: "Cars",
-        title: "Luxury Machine",
-        image:
-            "https://images.unsplash.com/photo-1553440569-bcc63803a83d?auto=format&fit=crop&w=900&q=85"
+      setTimeout(() => {
+        loader.classList.add("hide");
+      }, 350);
     }
 
-];
+    loaderProgress.style.width = `${loading}%`;
+    loaderPercent.textContent = `${loading}%`;
+
+  }, 60);
 
 
-/* =========================================
-   ELEMENTS
-========================================= */
+  /* =====================================================
+     TYPING ANIMATION
+     ===================================================== */
 
-const feed =
-    document.getElementById("feed");
+  const typingElement = document.getElementById("typing-text");
 
-const searchInput =
-    document.getElementById("searchInput");
+  const roles = [
+    "Frontend Developer",
+    "Computer Engineer",
+    "Problem Solver",
+    "UI Explorer",
+    "Tech Enthusiast",
+    "AI Explorer"
+  ];
 
-const categories =
-    document.querySelectorAll(".category");
+  let roleIndex = 0;
+  let charIndex = 0;
+  let deleting = false;
 
-const randomizeBtn =
-    document.getElementById("randomizeBtn");
+  function typeRole() {
 
-const modal =
-    document.getElementById("createModal");
+    const currentRole = roles[roleIndex];
 
-const openCreate =
-    document.getElementById("openCreate");
+    if (!deleting) {
+      typingElement.textContent =
+        currentRole.substring(0, charIndex + 1);
 
-const heroCreate =
-    document.getElementById("heroCreate");
+      charIndex++;
 
-const createPanelBtn =
-    document.getElementById("createPanelBtn");
+      if (charIndex === currentRole.length) {
+        deleting = true;
 
-const closeModal =
-    document.getElementById("closeModal");
-
-const promptInput =
-    document.getElementById("promptInput");
-
-const counter =
-    document.getElementById("counter");
-
-const generateBtn =
-    document.getElementById("generateBtn");
-
-const styleSelect =
-    document.getElementById("styleSelect");
-
-const ratioSelect =
-    document.getElementById("ratioSelect");
-
-const viewer =
-    document.getElementById("viewer");
-
-const viewerImage =
-    document.getElementById("viewerImage");
-
-const viewerTitle =
-    document.getElementById("viewerTitle");
-
-const viewerClose =
-    document.getElementById("viewerClose");
-
-const viewerBackdrop =
-    document.getElementById("viewerBackdrop");
-
-const viewerSave =
-    document.getElementById("viewerSave");
-
-const toast =
-    document.getElementById("toast");
-
-const toastText =
-    document.getElementById("toastText");
-
-
-let activeCategory = "All";
-
-let currentViewerPin = null;
-
-
-/* =========================================
-   RENDER FEED
-========================================= */
-
-function renderFeed(list = pins) {
-
-    feed.innerHTML = "";
-
-    if (!list.length) {
-
-        feed.innerHTML = `
-            <div style="
-                grid-column:1/-1;
-                padding:60px;
-                text-align:center;
-                color:#888;
-            ">
-                <h3>No ideas found</h3>
-                <p>Try another search.</p>
-            </div>
-        `;
-
+        setTimeout(typeRole, 1700);
         return;
+      }
+
+    } else {
+
+      typingElement.textContent =
+        currentRole.substring(0, charIndex - 1);
+
+      charIndex--;
+
+      if (charIndex === 0) {
+        deleting = false;
+        roleIndex = (roleIndex + 1) % roles.length;
+      }
+
     }
 
+    setTimeout(
+      typeRole,
+      deleting ? 45 : 90
+    );
+  }
 
-    list.forEach(pin => {
-
-        const card =
-            document.createElement("article");
-
-        card.className =
-            "pin";
-
-
-        card.innerHTML = `
-
-            <img
-                src="${pin.image}"
-                alt="${escapeHTML(pin.title)}"
-                loading="lazy"
-            >
-
-            <div class="pin-overlay">
-
-                <button
-                    class="save-btn"
-                    data-save="${pin.id}"
-                >
-                    Save
-                </button>
-
-                <div class="pin-bottom">
-
-                    <span class="pin-title">
-                        ${escapeHTML(pin.title)}
-                    </span>
-
-                    <button
-                        class="like-btn"
-                        data-like="${pin.id}"
-                    >
-                        ♡
-                    </button>
-
-                </div>
-
-            </div>
-        `;
+  typeRole();
 
 
-        card
-            .querySelector("img")
-            .addEventListener(
-                "click",
-                () => openViewer(pin)
-            );
+  /* =====================================================
+     PARTICLES
+     ===================================================== */
+
+  const particlesContainer =
+    document.getElementById("particles");
+
+  const particleCount =
+    window.innerWidth < 700 ? 20 : 55;
+
+  for (let i = 0; i < particleCount; i++) {
+
+    const particle =
+      document.createElement("div");
+
+    particle.className = "particle";
+
+    particle.style.left =
+      `${Math.random() * 100}%`;
+
+    particle.style.top =
+      `${Math.random() * 100}%`;
+
+    particle.style.animationDuration =
+      `${8 + Math.random() * 15}s`;
+
+    particle.style.animationDelay =
+      `${Math.random() * 10}s`;
+
+    particle.style.opacity =
+      `${0.15 + Math.random() * 0.5}`;
+
+    particlesContainer.appendChild(particle);
+  }
 
 
-        card
-            .querySelector(
-                `[data-save="${pin.id}"]`
-            )
-            .addEventListener(
-                "click",
-                event => {
+  /* =====================================================
+     CUSTOM CURSOR
+     ===================================================== */
 
-                    event.stopPropagation();
+  const cursorDot =
+    document.querySelector(".cursor-dot");
 
-                    savePin(pin);
+  const cursorRing =
+    document.querySelector(".cursor-ring");
 
-                }
-            );
+  const mouseGlow =
+    document.querySelector(".mouse-glow");
+
+  let mouseX = window.innerWidth / 2;
+  let mouseY = window.innerHeight / 2;
+
+  let ringX = mouseX;
+  let ringY = mouseY;
+
+  window.addEventListener("mousemove", (e) => {
+
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+
+    cursorDot.style.left = `${mouseX}px`;
+    cursorDot.style.top = `${mouseY}px`;
+
+    mouseGlow.style.left = `${mouseX}px`;
+    mouseGlow.style.top = `${mouseY}px`;
+
+  });
+
+  function animateCursor() {
+
+    ringX += (mouseX - ringX) * 0.13;
+    ringY += (mouseY - ringY) * 0.13;
+
+    cursorRing.style.left = `${ringX}px`;
+    cursorRing.style.top = `${ringY}px`;
+
+    requestAnimationFrame(animateCursor);
+  }
+
+  animateCursor();
 
 
-        card
-            .querySelector(
-                `[data-like="${pin.id}"]`
-            )
-            .addEventListener(
-                "click",
-                event => {
+  /* =====================================================
+     CURSOR HOVER
+     ===================================================== */
 
-                    event.stopPropagation();
+  document.querySelectorAll("a, button, .project-card, .skill-card")
+    .forEach(element => {
 
-                    const button =
-                        event.currentTarget;
+      element.addEventListener("mouseenter", () => {
+        cursorRing.classList.add("active");
+      });
 
-                    button.textContent =
-                        button.textContent === "♡"
-                            ? "♥"
-                            : "♡";
-
-                }
-            );
-
-
-        feed.appendChild(card);
+      element.addEventListener("mouseleave", () => {
+        cursorRing.classList.remove("active");
+      });
 
     });
 
-}
+
+  /* =====================================================
+     MAGNETIC BUTTONS
+     ===================================================== */
+
+  document.querySelectorAll(".magnetic")
+    .forEach(button => {
+
+      button.addEventListener("mousemove", (e) => {
+
+        const rect =
+          button.getBoundingClientRect();
+
+        const x =
+          e.clientX - rect.left - rect.width / 2;
+
+        const y =
+          e.clientY - rect.top - rect.height / 2;
+
+        button.style.transform =
+          `translate(${x * 0.15}px, ${y * 0.15}px)`;
+
+      });
+
+      button.addEventListener("mouseleave", () => {
+        button.style.transform = "";
+      });
+
+    });
 
 
-/* =========================================
-   FILTER
-========================================= */
+  /* =====================================================
+     3D TILT
+     ===================================================== */
 
-function filterFeed() {
+  document.querySelectorAll(".tilt-card")
+    .forEach(card => {
 
-    const query =
-        searchInput.value
-            .trim()
-            .toLowerCase();
+      card.addEventListener("mousemove", (e) => {
+
+        if (window.innerWidth < 900) return;
+
+        const rect =
+          card.getBoundingClientRect();
+
+        const x =
+          e.clientX - rect.left;
+
+        const y =
+          e.clientY - rect.top;
+
+        const rotateY =
+          ((x / rect.width) - 0.5) * 10;
+
+        const rotateX =
+          ((y / rect.height) - 0.5) * -10;
+
+        card.style.transform =
+          `perspective(1000px)
+           rotateX(${rotateX}deg)
+           rotateY(${rotateY}deg)
+           translateY(-5px)`;
+
+      });
+
+      card.addEventListener("mouseleave", () => {
+        card.style.transform = "";
+      });
+
+    });
 
 
-    const filtered =
-        pins.filter(pin => {
+  /* =====================================================
+     SCROLL REVEAL
+     ===================================================== */
 
-            const matchesCategory =
-                activeCategory === "All" ||
-                pin.category === activeCategory;
+  const revealElements =
+    document.querySelectorAll(".reveal");
 
+  const revealObserver =
+    new IntersectionObserver(
+      (entries, observer) => {
 
-            const matchesSearch =
-                !query ||
-                pin.title
-                    .toLowerCase()
-                    .includes(query) ||
-                pin.category
-                    .toLowerCase()
-                    .includes(query);
+        entries.forEach(entry => {
 
+          if (entry.isIntersecting) {
 
-            return (
-                matchesCategory &&
-                matchesSearch
-            );
+            entry.target.classList.add("visible");
+
+            observer.unobserve(entry.target);
+
+          }
 
         });
 
-
-    renderFeed(filtered);
-
-}
-
-
-categories.forEach(category => {
-
-    category.addEventListener(
-        "click",
-        () => {
-
-            categories.forEach(
-                item =>
-                    item.classList.remove(
-                        "active"
-                    )
-            );
-
-
-            category.classList.add(
-                "active"
-            );
-
-
-            activeCategory =
-                category.dataset.category;
-
-
-            filterFeed();
-
-        }
+      },
+      {
+        threshold: 0.12
+      }
     );
 
-});
+  revealElements.forEach(element => {
+    revealObserver.observe(element);
+  });
 
 
-searchInput.addEventListener(
-    "input",
-    filterFeed
-);
+  /* =====================================================
+     STAT COUNTERS
+     ===================================================== */
 
+  const counters =
+    document.querySelectorAll("[data-count]");
 
-/* =========================================
-   SHUFFLE
-========================================= */
+  const counterObserver =
+    new IntersectionObserver(
+      entries => {
 
-randomizeBtn.addEventListener(
-    "click",
-    () => {
+        entries.forEach(entry => {
 
-        const shuffled =
-            [...pins].sort(
-                () => Math.random() - .5
-            );
+          if (!entry.isIntersecting) return;
 
-        renderFeed(shuffled);
+          const counter =
+            entry.target;
 
-        showToast(
-            "Feed shuffled."
-        );
+          const target =
+            Number(counter.dataset.count);
 
-    }
-);
+          let current = 0;
 
+          const duration = 1300;
 
-/* =========================================
-   MODAL
-========================================= */
+          const start =
+            performance.now();
 
-function openModal() {
+          function updateCounter(now) {
 
-    modal.classList.remove(
-        "hidden"
-    );
+            const progress =
+              Math.min(
+                (now - start) / duration,
+                1
+              );
 
-    document.body.style.overflow =
-        "hidden";
+            const eased =
+              1 - Math.pow(1 - progress, 3);
 
-    setTimeout(
-        () => promptInput.focus(),
-        100
-    );
+            current =
+              Math.floor(target * eased);
 
-}
+            counter.textContent =
+              `${current}+`;
 
+            if (progress < 1) {
+              requestAnimationFrame(updateCounter);
+            }
 
-function closeCreateModal() {
+          }
 
-    modal.classList.add(
-        "hidden"
-    );
+          requestAnimationFrame(updateCounter);
 
-    document.body.style.overflow =
-        "";
+          counterObserver.unobserve(counter);
 
-}
-
-
-openCreate.addEventListener(
-    "click",
-    openModal
-);
-
-heroCreate.addEventListener(
-    "click",
-    openModal
-);
-
-createPanelBtn.addEventListener(
-    "click",
-    openModal
-);
-
-closeModal.addEventListener(
-    "click",
-    closeCreateModal
-);
-
-document
-    .querySelector(".modal-backdrop")
-    .addEventListener(
-        "click",
-        closeCreateModal
-    );
-
-
-/* =========================================
-   PROMPT COUNTER
-========================================= */
-
-promptInput.addEventListener(
-    "input",
-    () => {
-
-        counter.textContent =
-            `${promptInput.value.length} / 1000`;
-
-    }
-);
-
-
-/* =========================================
-   GENERATE
-========================================= */
-
-generateBtn.addEventListener(
-    "click",
-    generateImage
-);
-
-
-async function generateImage() {
-
-    const prompt =
-        promptInput.value.trim();
-
-
-    if (!prompt) {
-
-        showToast(
-            "Enter a prompt first."
-        );
-
-        promptInput.focus();
-
-        return;
-
-    }
-
-
-    generateBtn.disabled =
-        true;
-
-    generateBtn.textContent =
-        "Creating...";
-
-
-    try {
-
-        /*
-            SAFE API ARCHITECTURE
-
-            Your secure backend should expose:
-
-                POST /api/generate
-
-            Body:
-
-                {
-                    prompt,
-                    style,
-                    ratio
-                }
-
-            Response:
-
-                {
-                    imageUrl
-                }
-        */
-
-
-        const response =
-            await fetch(
-                "/api/generate",
-                {
-
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    body: JSON.stringify({
-
-                        prompt,
-
-                        style:
-                            styleSelect.value,
-
-                        ratio:
-                            ratioSelect.value
-
-                    })
-
-                }
-            );
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                "API unavailable"
-            );
-
-        }
-
-
-        const data =
-            await response.json();
-
-
-        if (!data.imageUrl) {
-
-            throw new Error(
-                "No image returned"
-            );
-
-        }
-
-
-        addGeneratedPin(
-            data.imageUrl,
-            prompt
-        );
-
-
-        closeCreateModal();
-
-
-        showToast(
-            "Your AI image was created!"
-        );
-
-
-    } catch (error) {
-
-        console.error(error);
-
-        /*
-            The frontend cannot securely contain
-            your OpenAI secret key.
-
-            If /api/generate isn't connected,
-            show a helpful message instead of
-            exposing the key.
-        */
-
-        showToast(
-            "Connect your secure image API."
-        );
-
-    } finally {
-
-        generateBtn.disabled =
-            false;
-
-        generateBtn.textContent =
-            "✦ Generate image";
-
-    }
-
-}
-
-
-/* =========================================
-   ADD GENERATED PIN
-========================================= */
-
-function addGeneratedPin(
-    imageUrl,
-    prompt
-) {
-
-    const newPin = {
-
-        id:
-            Date.now(),
-
-        category:
-            "AI Created",
-
-        title:
-            prompt.substring(
-                0,
-                55
-            ),
-
-        image:
-            imageUrl
-
-    };
-
-
-    pins.unshift(
-        newPin
-    );
-
-
-    renderFeed(
-        pins
-    );
-
-
-    document
-        .getElementById("feed")
-        .scrollIntoView({
-            behavior: "smooth"
         });
 
-}
-
-
-/* =========================================
-   VIEWER
-========================================= */
-
-function openViewer(pin) {
-
-    currentViewerPin =
-        pin;
-
-    viewerImage.src =
-        pin.image;
-
-    viewerTitle.textContent =
-        pin.title;
-
-    viewer.classList.remove(
-        "hidden"
+      },
+      {
+        threshold: 0.8
+      }
     );
 
-    document.body.style.overflow =
-        "hidden";
-
-}
-
-
-function closeViewer() {
-
-    viewer.classList.add(
-        "hidden"
-    );
-
-    document.body.style.overflow =
-        "";
-
-}
+  counters.forEach(counter => {
+    counterObserver.observe(counter);
+  });
 
 
-viewerClose.addEventListener(
-    "click",
-    closeViewer
-);
+  /* =====================================================
+     NAVBAR
+     ===================================================== */
 
-viewerBackdrop.addEventListener(
-    "click",
-    closeViewer
-);
+  const navbar =
+    document.getElementById("navbar");
 
+  const sections =
+    document.querySelectorAll("section[id]");
 
-viewerSave.addEventListener(
-    "click",
-    () => {
+  const navLinks =
+    document.querySelectorAll(".nav-link");
 
-        if (
-            currentViewerPin
-        ) {
+  function updateNavbar() {
 
-            savePin(
-                currentViewerPin
-            );
-
-        }
-
-    }
-);
-
-
-/* =========================================
-   SAVE PIN
-========================================= */
-
-function getSaved() {
-
-    try {
-
-        return JSON.parse(
-            localStorage.getItem(
-                "pinvision-saved"
-            )
-        ) || [];
-
-    } catch {
-
-        return [];
-
+    if (window.scrollY > 80) {
+      navbar.classList.add("scrolled");
+    } else {
+      navbar.classList.remove("scrolled");
     }
 
-}
+    let currentSection = "";
+
+    sections.forEach(section => {
+
+      const sectionTop =
+        section.offsetTop - 200;
+
+      if (window.scrollY >= sectionTop) {
+        currentSection = section.id;
+      }
+
+    });
+
+    navLinks.forEach(link => {
+
+      link.classList.remove("active");
+
+      if (
+        link.getAttribute("href") ===
+        `#${currentSection}`
+      ) {
+        link.classList.add("active");
+      }
+
+    });
+
+  }
+
+  window.addEventListener(
+    "scroll",
+    updateNavbar,
+    { passive: true }
+  );
+
+  updateNavbar();
 
 
-function savePin(pin) {
+  /* =====================================================
+     SCROLL PROGRESS
+     ===================================================== */
 
-    const saved =
-        getSaved();
+  const progressBar =
+    document.getElementById("progress-bar");
+
+  function updateProgress() {
+
+    const scrollTop =
+      window.scrollY;
+
+    const documentHeight =
+      document.documentElement.scrollHeight -
+      window.innerHeight;
+
+    const percentage =
+      documentHeight > 0
+        ? (scrollTop / documentHeight) * 100
+        : 0;
+
+    progressBar.style.width =
+      `${percentage}%`;
+
+  }
+
+  window.addEventListener(
+    "scroll",
+    updateProgress,
+    { passive: true }
+  );
 
 
-    const exists =
-        saved.some(
-            item =>
-                item.id === pin.id
-        );
+  /* =====================================================
+     MOBILE MENU
+     ===================================================== */
+
+  const menuToggle =
+    document.getElementById("menu-toggle");
+
+  const mobileMenu =
+    document.getElementById("mobile-menu");
+
+  menuToggle.addEventListener("click", () => {
+
+    mobileMenu.classList.toggle("open");
+
+  });
+
+  mobileMenu.querySelectorAll("a")
+    .forEach(link => {
+
+      link.addEventListener("click", () => {
+        mobileMenu.classList.remove("open");
+      });
+
+    });
 
 
-    if (exists) {
+  /* =====================================================
+     DARK / LIGHT MODE
+     ===================================================== */
 
-        showToast(
-            "Already saved."
-        );
+  const themeToggle =
+    document.getElementById("theme-toggle");
 
-        return;
+  const savedTheme =
+    localStorage.getItem("atharv-theme");
 
-    }
+  if (savedTheme === "light") {
+    document.body.classList.add("light");
+    themeToggle.textContent = "☾";
+  }
 
+  themeToggle.addEventListener("click", () => {
 
-    saved.push(
-        pin
-    );
+    document.body.classList.toggle("light");
 
+    const isLight =
+      document.body.classList.contains("light");
+
+    themeToggle.textContent =
+      isLight ? "☾" : "☼";
 
     localStorage.setItem(
-        "pinvision-saved",
-        JSON.stringify(saved)
+      "atharv-theme",
+      isLight ? "light" : "dark"
     );
 
-
-    showToast(
-        "Pin saved!"
-    );
-
-}
+  });
 
 
-/* =========================================
-   TOAST
-========================================= */
+  /* =====================================================
+     PROJECT MODAL
+     ===================================================== */
 
-function showToast(
-    message
-) {
+  const modal =
+    document.getElementById("project-modal");
 
-    toastText.textContent =
-        message;
+  const modalTitle =
+    document.getElementById("modal-title");
 
-    toast.classList.add(
-        "show"
-    );
+  const modalDescription =
+    document.getElementById("modal-description");
+
+  const modalTags =
+    document.getElementById("modal-tags");
+
+  const modalIcon =
+    document.getElementById("modal-icon");
+
+  const closeModal =
+    document.querySelector(".modal-close");
+
+  const modalBackdrop =
+    document.querySelector(".modal-backdrop");
+
+  const projectIcons = {
+    "Weather Dashboard": "☁",
+    "LUXE E-Commerce": "◈",
+    "AI Image Generator": "✦",
+    "Smart Todo": "✓",
+    "Bus Management System": "▣",
+    "Music Player": "♫"
+  };
+
+  document.querySelectorAll(".project-card")
+    .forEach(card => {
+
+      const button =
+        card.querySelector(".view-project");
+
+      button.addEventListener("click", () => {
+
+        const title =
+          card.dataset.title;
+
+        const description =
+          card.dataset.description;
+
+        const technologies =
+          card.dataset.tech.split(",");
+
+        modalTitle.textContent =
+          title;
+
+        modalDescription.textContent =
+          description;
+
+        modalIcon.textContent =
+          projectIcons[title] || "✦";
+
+        modalTags.innerHTML = "";
+
+        technologies.forEach(tech => {
+
+          const tag =
+            document.createElement("span");
+
+          tag.textContent = tech;
+
+          modalTags.appendChild(tag);
+
+        });
+
+        modal.classList.add("open");
+
+        document.body.style.overflow =
+          "hidden";
+
+      });
+
+    });
+
+  function closeProjectModal() {
+
+    modal.classList.remove("open");
+
+    document.body.style.overflow = "";
+
+  }
+
+  closeModal.addEventListener(
+    "click",
+    closeProjectModal
+  );
+
+  modalBackdrop.addEventListener(
+    "click",
+    closeProjectModal
+  );
 
 
-    clearTimeout(
-        window.toastTimer
-    );
+  /* =====================================================
+     ESCAPE KEY
+     ===================================================== */
 
+  document.addEventListener("keydown", e => {
 
-    window.toastTimer =
-        setTimeout(
-            () => {
-
-                toast.classList.remove(
-                    "show"
-                );
-
-            },
-            2500
-        );
-
-}
-
-
-/* =========================================
-   ESCAPE HTML
-========================================= */
-
-function escapeHTML(value) {
-
-    return String(value)
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-        .replace(
-            /</g,
-            "&lt;"
-        )
-        .replace(
-            />/g,
-            "&gt;"
-        )
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-        .replace(
-            /'/g,
-            "&#039;"
-        );
-
-}
-
-
-/* =========================================
-   KEYBOARD SHORTCUT
-========================================= */
-
-document.addEventListener(
-    "keydown",
-    event => {
-
-        if (
-            (event.ctrlKey ||
-             event.metaKey) &&
-            event.key.toLowerCase() === "k"
-        ) {
-
-            event.preventDefault();
-
-            searchInput.focus();
-
-        }
-
-
-        if (
-            event.key === "Escape"
-        ) {
-
-            closeCreateModal();
-
-            closeViewer();
-
-        }
-
+    if (e.key === "Escape") {
+      closeProjectModal();
+      mobileMenu.classList.remove("open");
     }
-);
+
+  });
 
 
-/* =========================================
-   INITIALIZE
-========================================= */
+  /* =====================================================
+     BACK TO TOP
+     ===================================================== */
 
-renderFeed();
+  const backTop =
+    document.getElementById("back-top");
+
+  window.addEventListener(
+    "scroll",
+    () => {
+
+      if (window.scrollY > 600) {
+        backTop.classList.add("show");
+      } else {
+        backTop.classList.remove("show");
+      }
+
+    },
+    { passive: true }
+  );
+
+  backTop.addEventListener("click", () => {
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+
+  });
+
+
+  /* =====================================================
+     PARALLAX BACKGROUND
+     ===================================================== */
+
+  let ticking = false;
+
+  window.addEventListener(
+    "scroll",
+    () => {
+
+      if (!ticking) {
+
+        requestAnimationFrame(() => {
+
+          const y =
+            window.scrollY;
+
+          document.querySelectorAll(".aurora")
+            .forEach((orb, index) => {
+
+              const speed =
+                (index + 1) * 0.015;
+
+              orb.style.transform =
+                `translateY(${y * speed}px)`;
+
+            });
+
+          ticking = false;
+
+        });
+
+        ticking = true;
+
+      }
+
+    },
+    { passive: true }
+  );
+
+
+  /* =====================================================
+     SMOOTH INTERNAL LINKS
+     ===================================================== */
+
+  document.querySelectorAll('a[href^="#"]')
+    .forEach(link => {
+
+      link.addEventListener("click", e => {
+
+        const targetId =
+          link.getAttribute("href");
+
+        if (targetId === "#") return;
+
+        const target =
+          document.querySelector(targetId);
+
+        if (!target) return;
+
+        e.preventDefault();
+
+        target.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+
+      });
+
+    });
+
+
+  /* =====================================================
+     LAZY IMAGE SUPPORT
+     ===================================================== */
+
+  document.querySelectorAll("img")
+    .forEach(img => {
+      img.loading = "lazy";
+    });
+
+
+  /* =====================================================
+     REDUCED MOTION
+     ===================================================== */
+
+  const reduceMotion =
+    window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    );
+
+  if (reduceMotion.matches) {
+
+    document
+      .querySelectorAll(".particle")
+      .forEach(p => {
+        p.style.animation = "none";
+      });
+
+  }
+
+});
