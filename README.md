@@ -1,109 +1,141 @@
 # AIVISION — AI Image Platform
 
-AIVISION is a responsive AI image-generation interface with a light glassmorphism design system. It includes a prompt composer, style presets, artwork inspiration gallery, favorites, recent creations, theme switching, and responsive navigation.
+AIVISION is a Pinterest-inspired AI art studio: a responsive masonry inspiration feed, searchable moodboard, reusable prompts, favorites, and a real image-generation endpoint powered by OpenAI's image API.
 
-## Preview
+## What's included
 
-Open `index.html` in a browser, or serve the project with a local static server. The current frontend uses plain HTML, CSS, and JavaScript so it can be previewed without a build step.
+- Pinterest-like masonry discovery gallery with real photography from Unsplash
+- Inspiration search, topic filters, favorite pins, and reusable image prompts
+- Responsive light glassmorphism UI and dark mode
+- Prompt builder, style presets, and image-size selection
+- Private studio login with signed, expiring HTTP-only session cookies
+- `POST /api/images/generate` server endpoint with input validation and rate limits
+- Generated PNGs saved to a local `generated/` folder and served only to authenticated sessions
+- Secrets kept in server environment variables, never in browser JavaScript
 
-## Current features
+## Requirements
 
-- Light glassmorphism UI with a pastel blue and lavender palette
-- Responsive desktop, tablet, and mobile layouts
-- Prompt composer with character count and prompt-improvement helper
-- Style and aspect-ratio selectors
-- Inspiration gallery with category filters and reusable prompts
-- Favorite artwork saved in browser storage
-- Light/dark theme preference
-- Recent image history, export, and download controls
-- Image preview modal and keyboard dismissal
-- Accessible labels, focus states, and reduced-motion support
+- Node.js 20 or newer
+- An OpenAI API key with access to an image-generation model
+- A long private studio password
+- A random session secret of at least 32 characters
 
-## Project files
+Image generation can incur provider charges. Check your provider's current pricing and usage limits before using it.
 
-```text
-AI-image-platform/
-├── index.html    # Application layout and semantic page structure
-├── style.css     # Glassmorphism design system and responsive styles
-├── script.js     # UI interactions and image API client
-└── README.md     # Project documentation
-```
+## Run it locally
 
-## Run locally
+1. Clone this repository and open its directory:
 
-### Option 1: Open directly
+   ```bash
+   git clone https://github.com/AtharvBulkunde/AI-image-platform.git
+   cd AI-image-platform
+   ```
 
-Open `index.html` in a modern browser. Some browser security policies may restrict API requests when opening the file directly.
+2. Install dependencies:
 
-### Option 2: Use a local server
+   ```bash
+   npm install
+   ```
 
-If Python is installed, run this command from the project directory:
+3. Copy the environment template to `.env`:
 
-```bash
-python -m http.server 5500
-```
+   **Windows PowerShell**
+   ```powershell
+   Copy-Item .env.example .env
+   ```
 
-Then visit http://localhost:5500.
+   **macOS / Linux**
+   ```bash
+   cp .env.example .env
+   ```
 
-## AI image-generation backend
+4. Edit `.env` and provide your own values:
 
-The UI is ready to call a backend endpoint:
+   ```dotenv
+   OPENAI_API_KEY=your_real_api_key
+   OPENAI_IMAGE_MODEL=gpt-image-1
+   AIVISION_ACCESS_PASSWORD=use_a_long_unique_password
+   AIVISION_SESSION_SECRET=replace_with_a_random_secret_at_least_32_characters
+   PORT=3000
+   NODE_ENV=development
+   ```
 
-```http
-POST /api/images/generate
-Content-Type: application/json
-```
+   Generate a session secret with Node.js:
 
-Example request:
+   ```bash
+   node -e "console.log(require('node:crypto').randomBytes(48).toString('hex'))"
+   ```
+
+   Never commit `.env` or share your API key. The repository ignores `.env` files; only the safe `.env.example` template belongs in Git.
+
+5. Start the server:
+
+   ```bash
+   npm start
+   ```
+
+6. Open http://localhost:3000, enter the studio password, describe an image, choose a style and aspect ratio, and select **Generate image**.
+
+Do not use `python -m http.server` for the full application: it serves static files only and does not run the API endpoint. Run the Node.js server instead.
+
+## API
+
+### `POST /api/images/generate`
+
+Requires an authenticated studio session cookie. The frontend obtains this through `POST /api/auth/login`.
+
+Example JSON request:
 
 ```json
 {
-  "prompt": "A peaceful Japanese garden at sunrise",
+  "prompt": "A peaceful Japanese garden at sunrise, soft pastel colors",
   "style": "anime",
   "size": "1024x1024",
   "quality": "standard"
 }
 ```
 
-The endpoint should return JSON containing an image URL, for example:
+Successful response:
 
 ```json
 {
-  "imageUrl": "https://your-storage.example/generated-image.png"
+  "imageUrl": "/generated/<random-image-id>.png",
+  "prompt": "A peaceful Japanese garden at sunrise, soft pastel colors",
+  "style": "anime",
+  "size": "1024x1024",
+  "createdAt": "2026-10-16T12:00:00.000Z"
 }
 ```
 
-**Important:** The repository currently contains the frontend only. Real image generation will not work until you implement and deploy the server endpoint and configure an AI provider. The frontend intentionally shows an informative error rather than pretending that an image was generated.
+The server validates prompt length, style, and image dimensions; rate-limits generation and login; calls the provider using the server-side key; and saves the returned image bytes locally. Provider credentials and raw error details are not sent to the browser.
 
-Recommended backend additions:
+Other routes:
 
-- Node.js + Express or a serverless API route
-- Server-side AI provider adapter
-- Request validation and rate limiting
-- Authentication before saving private user images
-- Object storage for generated images
-- Database for users, prompts, favorites, and image history
-- Environment variables for secrets; never place API keys in browser JavaScript
+- `GET /api/health` — minimal service/provider configuration status
+- `GET /api/auth/status` — current session status
+- `POST /api/auth/login` — validate the studio password and issue an HTTP-only cookie
+- `POST /api/auth/logout` — clear the studio session
+- `GET /generated/:filename` — serve an image only to an authenticated session
 
-## Deployment
+## Deploying
 
-The static frontend can be deployed to GitHub Pages, Netlify, or Vercel. A real generation endpoint must be deployed separately or as serverless functions and configured to accept requests from the frontend. Configure CORS appropriately if the API uses a different origin.
+Deploy to a Node.js host that supports persistent storage, or adapt the image storage layer to object storage. Set all secrets in the host's environment-variable dashboard. Set `NODE_ENV=production` and use HTTPS; secure cookies are enabled in production.
 
-## Security and privacy notes
+The current implementation writes generated PNGs into the local `generated/` directory. Ephemeral serverless filesystems may delete those files between requests or deployments; use durable object storage for that environment. Configure proxy trust carefully if your host uses a reverse proxy.
 
-- Do not commit real API keys, passwords, or private environment files.
-- Browser storage is device-local and is not account-level persistence.
-- Validate prompts, request sizes, authentication, and provider responses on the server.
-- Add provider-specific moderation, quotas, and rate limits before public launch.
+The single studio password is suitable for a private demo, not a multi-user production service. For a public launch, add individual user accounts, persistent per-user image records, CSRF protection appropriate to your authentication architecture, quotas, abuse monitoring, and durable image storage.
 
-## Roadmap
+## Pinterest-style inspiration imagery
 
-- [ ] Implement the server-side image-generation endpoint
-- [ ] Add secure authentication
-- [ ] Persist creations in a database and object storage
-- [ ] Add user profiles and community submissions
-- [ ] Add automated frontend and API tests
+The masonry gallery uses direct Unsplash image URLs as visual inspiration. It does not scrape or hotlink images from Pinterest. If you want to import pins from a Pinterest account, use Pinterest's approved API and comply with its permissions and content rights.
+
+## Troubleshooting
+
+- **Server says credentials are missing:** confirm `.env` exists and has `OPENAI_API_KEY`, `AIVISION_ACCESS_PASSWORD`, and `AIVISION_SESSION_SECRET` set.
+- **Provider says unauthorized or quota exceeded:** check your API key, model access, billing, and provider limits.
+- **Images disappear after deployment:** use persistent storage or object storage rather than an ephemeral filesystem.
+- **Login cookie is not saved:** ensure the browser uses the same origin; production deployments must use HTTPS.
 
 ---
 
-Built as a lightweight foundation for a polished AI creativity studio.
+Built as a lightweight foundation for a private AI creativity studio.
