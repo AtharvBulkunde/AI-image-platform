@@ -43,3 +43,5 @@
 @media(max-width:1150px){.pinterest-grid{columns:3 190px}}
 @media(max-width:760px){.gallery-tools{justify-content:flex-start;margin-top:13px}.gallery-search{width:100%}.pinterest-grid{columns:2 145px;column-gap:10px}.pinterest-grid .pin-card{margin-bottom:10px}.pin-card .artwork-meta{padding:9px}.pin-card .artwork-meta h3{font-size:11px}.pin-card .artwork-meta p{font-size:9px}.pin-card .prompt-use{font-size:9px}.pin-overlay{opacity:1;transform:none;font-size:11px}.auth-modal{padding:22px}}
 @media(max-width:380px){.pinterest-grid{columns:2 125px;column-gap:8px}.pinterest-grid .pin-card{margin-bottom:8px}.pin-card .prompt-use{font-size:8px}}
+
+.auth-cancel{width:100%;margin-top:2px}
