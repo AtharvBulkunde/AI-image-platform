@@ -21,7 +21,7 @@ const accessPassword = process.env.AIVISION_ACCESS_PASSWORD || "";
 const sessionSecret = process.env.AIVISION_SESSION_SECRET || "";
 const apiKey = process.env.OPENAI_API_KEY || "";
 
-if (isProduction && (!accessPassword || !sessionSecret || sessionSecret.length < 32 || !apiKey)) {
+if (isProduction && (accessPassword.length < 12 || sessionSecret.length < 32 || !apiKey)) {
   throw new Error("Production requires OPENAI_API_KEY, AIVISION_ACCESS_PASSWORD, and AIVISION_SESSION_SECRET (32+ characters).");
 }
 if (sessionSecret && sessionSecret.length < 32) {
@@ -116,7 +116,7 @@ function sameOrigin(req, res, next) {
   next();
 }
 function requireSession(req, res, next) {
-  if (!accessPassword || !sessionSecret) return res.status(503).json({ error: "Server access is not configured. Set AIVISION_ACCESS_PASSWORD and AIVISION_SESSION_SECRET." });
+  if (accessPassword.length < 12 || !sessionSecret) return res.status(503).json({ error: "Server access is not configured. Set a 12+ character AIVISION_ACCESS_PASSWORD and a 32+ character AIVISION_SESSION_SECRET." });
   if (!hasSession(req)) return res.status(401).json({ error: "Please unlock your private studio first.", code: "AUTH_REQUIRED" });
   next();
 }
@@ -138,7 +138,7 @@ app.get("/api/auth/status", (req, res) => {
 app.post("/api/auth/login", sameOrigin, loginLimiter, (req, res) => {
   res.setHeader("Cache-Control", "no-store");
   const password = req.body?.password;
-  if (!accessPassword || !sessionSecret) return res.status(503).json({ error: "Set AIVISION_ACCESS_PASSWORD and AIVISION_SESSION_SECRET in your server environment first." });
+  if (accessPassword.length < 12 || !sessionSecret) return res.status(503).json({ error: "Set a 12+ character AIVISION_ACCESS_PASSWORD and a 32+ character AIVISION_SESSION_SECRET in the server environment first." });
   if (typeof password !== "string" || password.length > 512 || !safeEqual(password, accessPassword)) {
     return res.status(401).json({ error: "That password was not accepted." });
   }
