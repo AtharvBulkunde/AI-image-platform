@@ -1,766 +1,235 @@
-/* =========================================================
-   ATHARV PREMIUM PORTFOLIO
-   JAVASCRIPT
-   ========================================================= */
+(() => {
+  "use strict";
+  const $ = (selector, root = document) => root.querySelector(selector);
+  const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+  const STORAGE = { theme: "aivision-theme", favorites: "aivision-favorites", history: "aivision-history" };
+  let lastPrompt = "";
+  let toastTimer;
 
-document.addEventListener("DOMContentLoaded", () => {
-
-  /* =====================================================
-     LOADER
-     ===================================================== */
-
-  const loader = document.getElementById("loader");
-  const loaderProgress = document.getElementById("loader-progress");
-  const loaderPercent = document.getElementById("loader-percent");
-
-  let loading = 0;
-
-  const loaderInterval = setInterval(() => {
-
-    loading += Math.floor(Math.random() * 7) + 3;
-
-    if (loading >= 100) {
-      loading = 100;
-      clearInterval(loaderInterval);
-
-      setTimeout(() => {
-        loader.classList.add("hide");
-      }, 350);
+  function readStore(key, fallback) {
+    try { const value = localStorage.getItem(key); return value ? JSON.parse(value) : fallback; }
+    catch { return fallback; }
+  }
+  function writeStore(key, value) {
+    try { localStorage.setItem(key, JSON.stringify(value)); return true; }
+    catch { showToast("Browser storage is full or unavailable."); return false; }
+  }
+  function showToast(message) {
+    const toast = $("#toast");
+    if (!toast) return;
+    toast.textContent = message;
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove("show"), 2800);
+  }
+  function setStatus(message, type = "info") {
+    const status = $("#status-message");
+    status.textContent = message;
+    status.className = "status-message" + (type === "info" ? "" : " " + type);
+    status.hidden = false;
+  }
+  function refreshIcons() {
+    if (window.lucide && typeof window.lucide.createIcons === "function") window.lucide.createIcons();
+  }
+  function downloadBlob(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url; link.download = filename; link.style.display = "none";
+    document.body.appendChild(link); link.click(); link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1500);
+  }
+  function saveHistory(item) {
+    const history = readStore(STORAGE.history, []);
+    history.unshift(item);
+    writeStore(STORAGE.history, history.slice(0, 30));
+    renderHistory();
+  }
+  function renderHistory() {
+    const grid = $("#history-grid");
+    if (!grid) return;
+    const history = readStore(STORAGE.history, []);
+    if (!history.length) {
+      grid.innerHTML = '<div class="empty-state"><span><i data-lucide="images"></i></span><strong>Your canvas is waiting</strong><p>Generate your first image and it will show up here.</p></div>';
+      refreshIcons(); return;
     }
-
-    loaderProgress.style.width = `${loading}%`;
-    loaderPercent.textContent = `${loading}%`;
-
-  }, 60);
-
-
-  /* =====================================================
-     TYPING ANIMATION
-     ===================================================== */
-
-  const typingElement = document.getElementById("typing-text");
-
-  const roles = [
-    "Frontend Developer",
-    "Computer Engineer",
-    "Problem Solver",
-    "UI Explorer",
-    "Tech Enthusiast",
-    "AI Explorer"
-  ];
-
-  let roleIndex = 0;
-  let charIndex = 0;
-  let deleting = false;
-
-  function typeRole() {
-
-    const currentRole = roles[roleIndex];
-
-    if (!deleting) {
-      typingElement.textContent =
-        currentRole.substring(0, charIndex + 1);
-
-      charIndex++;
-
-      if (charIndex === currentRole.length) {
-        deleting = true;
-
-        setTimeout(typeRole, 1700);
-        return;
-      }
-
-    } else {
-
-      typingElement.textContent =
-        currentRole.substring(0, charIndex - 1);
-
-      charIndex--;
-
-      if (charIndex === 0) {
-        deleting = false;
-        roleIndex = (roleIndex + 1) % roles.length;
-      }
-
+    grid.replaceChildren();
+    history.forEach((item, index) => {
+      const card = document.createElement("article"); card.className = "history-card";
+      const img = document.createElement("img"); img.src = item.url; img.alt = item.prompt || "Generated artwork"; img.loading = "lazy";
+      img.addEventListener("click", () => openModal(item.url, item.prompt || "Your creation"));
+      const footer = document.createElement("div"); footer.className = "history-card-footer";
+      const prompt = document.createElement("p"); prompt.textContent = item.prompt || "AI artwork"; prompt.title = item.prompt || "";
+      const actions = document.createElement("div"); actions.className = "history-actions";
+      const download = document.createElement("button"); download.type = "button"; download.title = "Download image"; download.setAttribute("aria-label", "Download image"); download.innerHTML = '<i data-lucide="download"></i>';
+      download.addEventListener("click", () => downloadImage(item.url, "aivision-creation-" + (index + 1) + ".png"));
+      const remove = document.createElement("button"); remove.type = "button"; remove.title = "Remove from history"; remove.setAttribute("aria-label", "Remove from history"); remove.innerHTML = '<i data-lucide="trash-2"></i>';
+      remove.addEventListener("click", () => { const list = readStore(STORAGE.history, []); list.splice(index, 1); writeStore(STORAGE.history, list); renderHistory(); showToast("Removed from recent creations."); });
+      actions.append(download, remove); footer.append(prompt, actions); card.append(img, footer); grid.append(card);
+    });
+    refreshIcons();
+  }
+  async function downloadImage(url, filename) {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error("Download failed");
+      downloadBlob(await response.blob(), filename);
+    } catch {
+      if (/^https:\/\//i.test(url)) window.open(url, "_blank", "noopener,noreferrer");
+      else showToast("This image could not be downloaded.");
     }
-
-    setTimeout(
-      typeRole,
-      deleting ? 45 : 90
-    );
   }
-
-  typeRole();
-
-
-  /* =====================================================
-     PARTICLES
-     ===================================================== */
-
-  const particlesContainer =
-    document.getElementById("particles");
-
-  const particleCount =
-    window.innerWidth < 700 ? 20 : 55;
-
-  for (let i = 0; i < particleCount; i++) {
-
-    const particle =
-      document.createElement("div");
-
-    particle.className = "particle";
-
-    particle.style.left =
-      `${Math.random() * 100}%`;
-
-    particle.style.top =
-      `${Math.random() * 100}%`;
-
-    particle.style.animationDuration =
-      `${8 + Math.random() * 15}s`;
-
-    particle.style.animationDelay =
-      `${Math.random() * 10}s`;
-
-    particle.style.opacity =
-      `${0.15 + Math.random() * 0.5}`;
-
-    particlesContainer.appendChild(particle);
+  function openModal(url, title) {
+    $("#modal-image").src = url;
+    $("#modal-title").textContent = title || "Your creation";
+    $("#image-modal").hidden = false;
+    $("#close-modal").focus();
   }
-
-
-  /* =====================================================
-     CUSTOM CURSOR
-     ===================================================== */
-
-  const cursorDot =
-    document.querySelector(".cursor-dot");
-
-  const cursorRing =
-    document.querySelector(".cursor-ring");
-
-  const mouseGlow =
-    document.querySelector(".mouse-glow");
-
-  let mouseX = window.innerWidth / 2;
-  let mouseY = window.innerHeight / 2;
-
-  let ringX = mouseX;
-  let ringY = mouseY;
-
-  window.addEventListener("mousemove", (e) => {
-
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-
-    cursorDot.style.left = `${mouseX}px`;
-    cursorDot.style.top = `${mouseY}px`;
-
-    mouseGlow.style.left = `${mouseX}px`;
-    mouseGlow.style.top = `${mouseY}px`;
-
-  });
-
-  function animateCursor() {
-
-    ringX += (mouseX - ringX) * 0.13;
-    ringY += (mouseY - ringY) * 0.13;
-
-    cursorRing.style.left = `${ringX}px`;
-    cursorRing.style.top = `${ringY}px`;
-
-    requestAnimationFrame(animateCursor);
-  }
-
-  animateCursor();
-
-
-  /* =====================================================
-     CURSOR HOVER
-     ===================================================== */
-
-  document.querySelectorAll("a, button, .project-card, .skill-card")
-    .forEach(element => {
-
-      element.addEventListener("mouseenter", () => {
-        cursorRing.classList.add("active");
-      });
-
-      element.addEventListener("mouseleave", () => {
-        cursorRing.classList.remove("active");
-      });
-
-    });
-
-
-  /* =====================================================
-     MAGNETIC BUTTONS
-     ===================================================== */
-
-  document.querySelectorAll(".magnetic")
-    .forEach(button => {
-
-      button.addEventListener("mousemove", (e) => {
-
-        const rect =
-          button.getBoundingClientRect();
-
-        const x =
-          e.clientX - rect.left - rect.width / 2;
-
-        const y =
-          e.clientY - rect.top - rect.height / 2;
-
-        button.style.transform =
-          `translate(${x * 0.15}px, ${y * 0.15}px)`;
-
-      });
-
-      button.addEventListener("mouseleave", () => {
-        button.style.transform = "";
-      });
-
-    });
-
-
-  /* =====================================================
-     3D TILT
-     ===================================================== */
-
-  document.querySelectorAll(".tilt-card")
-    .forEach(card => {
-
-      card.addEventListener("mousemove", (e) => {
-
-        if (window.innerWidth < 900) return;
-
-        const rect =
-          card.getBoundingClientRect();
-
-        const x =
-          e.clientX - rect.left;
-
-        const y =
-          e.clientY - rect.top;
-
-        const rotateY =
-          ((x / rect.width) - 0.5) * 10;
-
-        const rotateX =
-          ((y / rect.height) - 0.5) * -10;
-
-        card.style.transform =
-          `perspective(1000px)
-           rotateX(${rotateX}deg)
-           rotateY(${rotateY}deg)
-           translateY(-5px)`;
-
-      });
-
-      card.addEventListener("mouseleave", () => {
-        card.style.transform = "";
-      });
-
-    });
-
-
-  /* =====================================================
-     SCROLL REVEAL
-     ===================================================== */
-
-  const revealElements =
-    document.querySelectorAll(".reveal");
-
-  const revealObserver =
-    new IntersectionObserver(
-      (entries, observer) => {
-
-        entries.forEach(entry => {
-
-          if (entry.isIntersecting) {
-
-            entry.target.classList.add("visible");
-
-            observer.unobserve(entry.target);
-
-          }
-
-        });
-
-      },
-      {
-        threshold: 0.12
-      }
-    );
-
-  revealElements.forEach(element => {
-    revealObserver.observe(element);
-  });
-
-
-  /* =====================================================
-     STAT COUNTERS
-     ===================================================== */
-
-  const counters =
-    document.querySelectorAll("[data-count]");
-
-  const counterObserver =
-    new IntersectionObserver(
-      entries => {
-
-        entries.forEach(entry => {
-
-          if (!entry.isIntersecting) return;
-
-          const counter =
-            entry.target;
-
-          const target =
-            Number(counter.dataset.count);
-
-          let current = 0;
-
-          const duration = 1300;
-
-          const start =
-            performance.now();
-
-          function updateCounter(now) {
-
-            const progress =
-              Math.min(
-                (now - start) / duration,
-                1
-              );
-
-            const eased =
-              1 - Math.pow(1 - progress, 3);
-
-            current =
-              Math.floor(target * eased);
-
-            counter.textContent =
-              `${current}+`;
-
-            if (progress < 1) {
-              requestAnimationFrame(updateCounter);
-            }
-
-          }
-
-          requestAnimationFrame(updateCounter);
-
-          counterObserver.unobserve(counter);
-
-        });
-
-      },
-      {
-        threshold: 0.8
-      }
-    );
-
-  counters.forEach(counter => {
-    counterObserver.observe(counter);
-  });
-
-
-  /* =====================================================
-     NAVBAR
-     ===================================================== */
-
-  const navbar =
-    document.getElementById("navbar");
-
-  const sections =
-    document.querySelectorAll("section[id]");
-
-  const navLinks =
-    document.querySelectorAll(".nav-link");
-
-  function updateNavbar() {
-
-    if (window.scrollY > 80) {
-      navbar.classList.add("scrolled");
-    } else {
-      navbar.classList.remove("scrolled");
+  function closeModal() { $("#image-modal").hidden = true; }
+  function setTheme(theme) {
+    document.body.classList.toggle("dark", theme === "dark");
+    writeStore(STORAGE.theme, theme);
+    const button = $("#theme-toggle");
+    if (button) {
+      button.innerHTML = theme === "dark" ? '<i data-lucide="moon"></i>' : '<i data-lucide="sun"></i>';
+      button.setAttribute("aria-label", theme === "dark" ? "Switch to light theme" : "Switch to dark theme");
     }
-
-    let currentSection = "";
-
-    sections.forEach(section => {
-
-      const sectionTop =
-        section.offsetTop - 200;
-
-      if (window.scrollY >= sectionTop) {
-        currentSection = section.id;
-      }
-
-    });
-
-    navLinks.forEach(link => {
-
-      link.classList.remove("active");
-
-      if (
-        link.getAttribute("href") ===
-        `#${currentSection}`
-      ) {
-        link.classList.add("active");
-      }
-
-    });
-
+    refreshIcons();
   }
-
-  window.addEventListener(
-    "scroll",
-    updateNavbar,
-    { passive: true }
-  );
-
-  updateNavbar();
-
-
-  /* =====================================================
-     SCROLL PROGRESS
-     ===================================================== */
-
-  const progressBar =
-    document.getElementById("progress-bar");
-
-  function updateProgress() {
-
-    const scrollTop =
-      window.scrollY;
-
-    const documentHeight =
-      document.documentElement.scrollHeight -
-      window.innerHeight;
-
-    const percentage =
-      documentHeight > 0
-        ? (scrollTop / documentHeight) * 100
-        : 0;
-
-    progressBar.style.width =
-      `${percentage}%`;
-
+  function setStyle(style) {
+    const select = $("#style-select");
+    if (!select) return;
+    const option = [...select.options].find(item => item.value === style);
+    if (option) select.value = style;
+    $("#create").scrollIntoView({ behavior: "smooth", block: "start" });
+    $("#prompt").focus({ preventScroll: true });
+    showToast("Style selected: " + (option ? option.textContent : style));
   }
-
-  window.addEventListener(
-    "scroll",
-    updateProgress,
-    { passive: true }
-  );
-
-
-  /* =====================================================
-     MOBILE MENU
-     ===================================================== */
-
-  const menuToggle =
-    document.getElementById("menu-toggle");
-
-  const mobileMenu =
-    document.getElementById("mobile-menu");
-
-  menuToggle.addEventListener("click", () => {
-
-    mobileMenu.classList.toggle("open");
-
-  });
-
-  mobileMenu.querySelectorAll("a")
-    .forEach(link => {
-
-      link.addEventListener("click", () => {
-        mobileMenu.classList.remove("open");
-      });
-
-    });
-
-
-  /* =====================================================
-     DARK / LIGHT MODE
-     ===================================================== */
-
-  const themeToggle =
-    document.getElementById("theme-toggle");
-
-  const savedTheme =
-    localStorage.getItem("atharv-theme");
-
-  if (savedTheme === "light") {
-    document.body.classList.add("light");
-    themeToggle.textContent = "☾";
+  function initFilters() {
+    $$(".filter-chip").forEach(button => button.addEventListener("click", () => {
+      $$(".filter-chip").forEach(item => item.classList.toggle("active", item === button));
+      const filter = button.dataset.filter;
+      $$(".artwork-card").forEach(card => card.hidden = filter !== "all" && card.dataset.category !== filter);
+    }));
   }
-
-  themeToggle.addEventListener("click", () => {
-
-    document.body.classList.toggle("light");
-
-    const isLight =
-      document.body.classList.contains("light");
-
-    themeToggle.textContent =
-      isLight ? "☾" : "☼";
-
-    localStorage.setItem(
-      "atharv-theme",
-      isLight ? "light" : "dark"
-    );
-
-  });
-
-
-  /* =====================================================
-     PROJECT MODAL
-     ===================================================== */
-
-  const modal =
-    document.getElementById("project-modal");
-
-  const modalTitle =
-    document.getElementById("modal-title");
-
-  const modalDescription =
-    document.getElementById("modal-description");
-
-  const modalTags =
-    document.getElementById("modal-tags");
-
-  const modalIcon =
-    document.getElementById("modal-icon");
-
-  const closeModal =
-    document.querySelector(".modal-close");
-
-  const modalBackdrop =
-    document.querySelector(".modal-backdrop");
-
-  const projectIcons = {
-    "Weather Dashboard": "☁",
-    "LUXE E-Commerce": "◈",
-    "AI Image Generator": "✦",
-    "Smart Todo": "✓",
-    "Bus Management System": "▣",
-    "Music Player": "♫"
-  };
-
-  document.querySelectorAll(".project-card")
-    .forEach(card => {
-
-      const button =
-        card.querySelector(".view-project");
-
+  function initFavorites() {
+    const favorites = new Set(readStore(STORAGE.favorites, []));
+    $$(".artwork-card").forEach(card => {
+      const title = $("h3", card)?.textContent || "";
+      const button = $(".favorite-btn", card);
+      const setFavoriteState = (active) => {
+        button.classList.toggle("is-favorite", active);
+        button.setAttribute("aria-pressed", String(active));
+        button.setAttribute("aria-label", (active ? "Remove " : "Add ") + title + " " + (active ? "from" : "to") + " favorites");
+      };
+      setFavoriteState(favorites.has(title));
       button.addEventListener("click", () => {
-
-        const title =
-          card.dataset.title;
-
-        const description =
-          card.dataset.description;
-
-        const technologies =
-          card.dataset.tech.split(",");
-
-        modalTitle.textContent =
-          title;
-
-        modalDescription.textContent =
-          description;
-
-        modalIcon.textContent =
-          projectIcons[title] || "✦";
-
-        modalTags.innerHTML = "";
-
-        technologies.forEach(tech => {
-
-          const tag =
-            document.createElement("span");
-
-          tag.textContent = tech;
-
-          modalTags.appendChild(tag);
-
-        });
-
-        modal.classList.add("open");
-
-        document.body.style.overflow =
-          "hidden";
-
+        if (favorites.has(title)) { favorites.delete(title); setFavoriteState(false); showToast("Removed from favorites."); }
+        else { favorites.add(title); setFavoriteState(true); showToast("Added to favorites."); }
+        writeStore(STORAGE.favorites, [...favorites]);
       });
-
     });
-
-  function closeProjectModal() {
-
-    modal.classList.remove("open");
-
-    document.body.style.overflow = "";
-
   }
-
-  closeModal.addEventListener(
-    "click",
-    closeProjectModal
-  );
-
-  modalBackdrop.addEventListener(
-    "click",
-    closeProjectModal
-  );
-
-
-  /* =====================================================
-     ESCAPE KEY
-     ===================================================== */
-
-  document.addEventListener("keydown", e => {
-
-    if (e.key === "Escape") {
-      closeProjectModal();
-      mobileMenu.classList.remove("open");
+  async function submitGeneration(event) {
+    event.preventDefault();
+    const promptInput = $("#prompt");
+    const prompt = promptInput.value.trim();
+    if (!prompt) { setStatus("Add a description of the image you want to create.", "error"); promptInput.focus(); return; }
+    if (prompt.length < 3) { setStatus("Please make your prompt a little more descriptive.", "error"); return; }
+    const button = $("#generate-button");
+    const original = button.innerHTML;
+    const payload = {
+      prompt,
+      style: $("#style-select").value,
+      size: $("#aspect-select").value,
+      quality: $("#quality-select").value
+    };
+    lastPrompt = prompt;
+    button.disabled = true;
+    button.innerHTML = '<i data-lucide="loader-circle"></i><span>Preparing...</span>';
+    refreshIcons();
+    setStatus("Checking the image-generation service…");
+    try {
+      const configuredEndpoint = document.querySelector('meta[name="aivision-api-endpoint"]')?.content?.trim();
+      const endpoint = configuredEndpoint || "/api/images/generate";
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        if (response.status === 404 || response.status === 501) throw new Error("The AI backend is not connected yet. Add a secure server endpoint at POST /api/images/generate to enable real image generation.");
+        throw new Error(data.error || data.message || "The image service returned an error (" + response.status + ").");
+      }
+      const imageUrl = data.imageUrl || data.url || data.image?.url || data.data?.[0]?.url;
+      if (!imageUrl) throw new Error("The server responded, but no image URL was returned. Check your AI provider adapter.");
+      saveHistory({ url: imageUrl, prompt, style: payload.style, createdAt: new Date().toISOString() });
+      setStatus("Your image is ready! It has been added to Recent creations.", "success");
+      openModal(imageUrl, prompt);
+      showToast("Image generated successfully.");
+    } catch (error) {
+      setStatus(error.message || "Could not connect to the image service. Please try again.", "error");
+      showToast("Image generation needs a configured AI backend.");
+    } finally {
+      button.disabled = false;
+      button.innerHTML = original;
+      refreshIcons();
     }
-
-  });
-
-
-  /* =====================================================
-     BACK TO TOP
-     ===================================================== */
-
-  const backTop =
-    document.getElementById("back-top");
-
-  window.addEventListener(
-    "scroll",
-    () => {
-
-      if (window.scrollY > 600) {
-        backTop.classList.add("show");
-      } else {
-        backTop.classList.remove("show");
-      }
-
-    },
-    { passive: true }
-  );
-
-  backTop.addEventListener("click", () => {
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
-
-  });
-
-
-  /* =====================================================
-     PARALLAX BACKGROUND
-     ===================================================== */
-
-  let ticking = false;
-
-  window.addEventListener(
-    "scroll",
-    () => {
-
-      if (!ticking) {
-
-        requestAnimationFrame(() => {
-
-          const y =
-            window.scrollY;
-
-          document.querySelectorAll(".aurora")
-            .forEach((orb, index) => {
-
-              const speed =
-                (index + 1) * 0.015;
-
-              orb.style.transform =
-                `translateY(${y * speed}px)`;
-
-            });
-
-          ticking = false;
-
-        });
-
-        ticking = true;
-
-      }
-
-    },
-    { passive: true }
-  );
-
-
-  /* =====================================================
-     SMOOTH INTERNAL LINKS
-     ===================================================== */
-
-  document.querySelectorAll('a[href^="#"]')
-    .forEach(link => {
-
-      link.addEventListener("click", e => {
-
-        const targetId =
-          link.getAttribute("href");
-
-        if (targetId === "#") return;
-
-        const target =
-          document.querySelector(targetId);
-
-        if (!target) return;
-
-        e.preventDefault();
-
-        target.scrollIntoView({
-          behavior: "smooth",
-          block: "start"
-        });
-
-      });
-
-    });
-
-
-  /* =====================================================
-     LAZY IMAGE SUPPORT
-     ===================================================== */
-
-  document.querySelectorAll("img")
-    .forEach(img => {
-      img.loading = "lazy";
-    });
-
-
-  /* =====================================================
-     REDUCED MOTION
-     ===================================================== */
-
-  const reduceMotion =
-    window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    );
-
-  if (reduceMotion.matches) {
-
-    document
-      .querySelectorAll(".particle")
-      .forEach(p => {
-        p.style.animation = "none";
-      });
-
   }
+  function init() {
+    refreshIcons();
+    setTheme(readStore(STORAGE.theme, "light"));
+    renderHistory();
+    initFilters();
+    initFavorites();
 
-});
+    const prompt = $("#prompt");
+    const count = $("#prompt-count");
+    prompt.addEventListener("input", () => { count.textContent = prompt.value.length + " / 1200"; });
+    $("#generate-form").addEventListener("submit", submitGeneration);
+    $("#enhance-prompt").addEventListener("click", () => {
+      const input = $("#prompt");
+      const value = input.value.trim();
+      if (!value) { input.value = "A beautiful, highly detailed scene with harmonious colors, soft cinematic lighting, thoughtful composition, atmospheric depth, and refined textures"; }
+      else if (!/lighting|composition|detailed|quality|atmosphere/i.test(value)) input.value = value.replace(/[.!\s]*$/, "") + ", highly detailed, refined composition, soft cinematic lighting, atmospheric depth, beautiful color harmony";
+      input.dispatchEvent(new Event("input"));
+      input.focus();
+      showToast("Prompt suggestions added — review and edit before generating.");
+    });
+    $$(".prompt-use").forEach(button => button.addEventListener("click", () => {
+      prompt.value = button.dataset.prompt || "";
+      prompt.dispatchEvent(new Event("input"));
+      prompt.focus();
+      $("#create").scrollIntoView({ behavior: "smooth" });
+      showToast("Prompt added to the generator.");
+    }));
+    $$(".style-card").forEach(button => button.addEventListener("click", () => setStyle(button.dataset.style)));
+    $("#theme-toggle").addEventListener("click", () => setTheme(document.body.classList.contains("dark") ? "light" : "dark"));
+    $("#open-sidebar").addEventListener("click", () => $("#sidebar").classList.add("open"));
+    $("#close-sidebar").addEventListener("click", () => $("#sidebar").classList.remove("open"));
+    $$(".side-link[data-view]").forEach(link => link.addEventListener("click", () => {
+      $$(".side-link[data-view]").forEach(item => item.classList.toggle("active", item === link));
+      $("#breadcrumb-current").textContent = link.querySelector("span")?.textContent || "Create image";
+      $("#sidebar").classList.remove("open");
+    }));
+    $("#open-history").addEventListener("click", () => { $("#history").scrollIntoView({ behavior: "smooth" }); $("#sidebar").classList.remove("open"); });
+    $("#clear-history").addEventListener("click", () => {
+      if (!readStore(STORAGE.history, []).length) { showToast("Your recent creations are already empty."); return; }
+      if (window.confirm("Clear all locally saved creation history? This cannot be undone.")) { writeStore(STORAGE.history, []); renderHistory(); showToast("Creation history cleared."); }
+    });
+    $("#download-history").addEventListener("click", () => {
+      const history = readStore(STORAGE.history, []);
+      if (!history.length) { showToast("There is no creation history to export yet."); return; }
+      downloadBlob(new Blob([JSON.stringify(history, null, 2)], { type: "application/json" }), "aivision-history.json");
+    });
+    $("#profile-button").addEventListener("click", () => showToast("Profile and sign-in require backend authentication."));
+    $("#close-modal").addEventListener("click", closeModal);
+    $("#image-modal").addEventListener("click", event => { if (event.target === $("#image-modal")) closeModal(); });
+    document.addEventListener("keydown", event => { if (event.key === "Escape") { closeModal(); $("#sidebar").classList.remove("open"); } });
+    $("#modal-download").addEventListener("click", () => { const image = $("#modal-image"); if (image.src) downloadImage(image.src, "aivision-artwork.png"); });
+    $("#modal-regenerate").addEventListener("click", () => { closeModal(); $("#prompt").value = lastPrompt || $("#prompt").value; $("#prompt").focus(); $("#create").scrollIntoView({ behavior: "smooth" }); showToast("Edit your prompt or generate again."); });
+    $("#explore").setAttribute("aria-label", "Explore curated artwork inspiration");
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+  else init();
+})();

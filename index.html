@@ -1,780 +1,118 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Atharv Bulkunde — Computer Engineering Student & Developer">
-  <title>Atharv Bulkunde | Developer Portfolio</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f8ff">
+  <meta name="description" content="AIVISION — turn your ideas into beautiful AI-generated art.">
+  <title>AIVISION — Create Beautiful AI Art</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script defer src="script.js"></script>
 </head>
-
 <body>
+  <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+  <div class="app-shell">
+    <aside class="sidebar glass" id="sidebar">
+      <a class="brand" href="#home" aria-label="AIVISION home"><span class="brand-mark"><i data-lucide="aperture"></i></span><span>AIVISION</span></a>
+      <button class="mobile-close" id="close-sidebar" aria-label="Close navigation"><i data-lucide="x"></i></button>
+      <div class="side-label">WORKSPACE</div>
+      <nav class="side-nav" aria-label="Main navigation">
+        <a class="side-link active" href="#create" data-view="create"><i data-lucide="wand-sparkles"></i><span>Create image</span></a>
+        <a class="side-link" href="#explore" data-view="explore"><i data-lucide="compass"></i><span>Explore</span></a>
+        <a class="side-link" href="#styles" data-view="styles"><i data-lucide="shapes"></i><span>Styles</span></a>
+        <a class="side-link" href="#history" data-view="history"><i data-lucide="images"></i><span>My creations</span></a>
+        <a class="side-link" href="#favorites" data-view="favorites"><i data-lucide="heart"></i><span>Favorites</span></a>
+      </nav>
+      <div class="side-label side-label-spaced">YOUR SPACE</div>
+      <div class="side-nav">
+        <button class="side-link" id="open-history"><i data-lucide="history"></i><span>Recent history</span></button>
+        <button class="side-link" id="clear-history"><i data-lucide="trash-2"></i><span>Clear history</span></button>
+      </div>
+      <div class="sidebar-spacer"></div>
+      <div class="upgrade-card">
+        <span class="upgrade-icon"><i data-lucide="sparkles"></i></span>
+        <strong>Make more magic</strong>
+        <p>Connect an AI provider to turn your prompts into original artwork.</p>
+        <a href="#create" class="upgrade-link">Start creating <i data-lucide="arrow-up-right"></i></a>
+      </div>
+      <div class="sidebar-bottom"><span class="online-dot"></span><span>Creative studio</span><span class="version">v1.0</span></div>
+    </aside>
 
-  <!-- CURSOR -->
-  <div class="cursor-dot"></div>
-  <div class="cursor-ring"></div>
-  <div class="mouse-glow"></div>
+    <main class="main-area" id="home">
+      <header class="topbar">
+        <button class="icon-btn mobile-menu" id="open-sidebar" aria-label="Open navigation"><i data-lucide="menu"></i></button>
+        <div class="breadcrumb"><span>Workspace</span><i data-lucide="chevron-right"></i><strong id="breadcrumb-current">Create image</strong></div>
+        <div class="top-actions">
+          <button class="icon-btn" id="theme-toggle" aria-label="Toggle color theme" title="Toggle theme"><i data-lucide="sun"></i></button>
+          <button class="avatar-btn" id="profile-button" title="Local demo profile"><span class="avatar">A</span><span class="profile-name">Atharv</span><i data-lucide="chevron-down"></i></button>
+        </div>
+      </header>
 
-  <!-- BACKGROUND -->
-  <div class="background">
-    <div class="aurora aurora-one"></div>
-    <div class="aurora aurora-two"></div>
-    <div class="aurora aurora-three"></div>
-    <div class="grid"></div>
-    <div id="particles"></div>
+      <section class="hero" id="create">
+        <div class="hero-copy">
+          <div class="eyebrow"><span class="eyebrow-spark"><i data-lucide="sparkles"></i></span> YOUR CREATIVE AI STUDIO</div>
+          <h1>Turn your ideas into<br><span class="gradient-text">beautiful art.</span></h1>
+          <p class="hero-subtitle">Dream it. Describe it. Bring it to life with AI-powered image creation.</p>
+          <div class="hero-stats"><div><strong>01</strong><span>Write a prompt</span></div><span class="stat-divider"></span><div><strong>02</strong><span>Choose a style</span></div><span class="stat-divider"></span><div><strong>03</strong><span>Create your art</span></div></div>
+        </div>
+        <div class="hero-art" aria-label="Dreamy AI artwork preview">
+          <div class="art-orb"></div><div class="art-sun"></div><div class="art-mountain mountain-back"></div><div class="art-mountain mountain-front"></div>
+          <div class="art-cloud cloud-one"></div><div class="art-cloud cloud-two"></div>
+          <div class="art-caption"><span class="caption-dot"></span> IMAGINATION, MADE VISIBLE</div>
+          <span class="art-star star-one">✦</span><span class="art-star star-two">✧</span><span class="art-star star-three">✦</span>
+        </div>
+      </section>
+
+      <section class="generator-card glass" aria-labelledby="generator-title">
+        <div class="section-heading"><div><span class="section-kicker">AI IMAGE GENERATOR</span><h2 id="generator-title">What will you create today?</h2></div><span class="secure-pill"><i data-lucide="shield-check"></i> Private by design</span></div>
+        <form id="generate-form">
+          <label class="sr-only" for="prompt">Describe the image you want to create</label>
+          <div class="prompt-box"><i data-lucide="image-plus" class="prompt-icon"></i><textarea id="prompt" name="prompt" rows="3" maxlength="1200" placeholder="A peaceful Japanese garden at sunrise, soft pastel colors, cinematic lighting..." required></textarea><div class="prompt-footer"><span id="prompt-count">0 / 1200</span><button type="button" class="text-action" id="enhance-prompt"><i data-lucide="wand-sparkles"></i> Improve prompt</button></div></div>
+          <div class="generator-options">
+            <div class="option-group"><label for="style-select">ART STYLE</label><div class="select-wrap"><i data-lucide="palette"></i><select id="style-select" name="style"><option value="anime">Anime</option><option value="photorealistic">Photorealistic</option><option value="3d render">3D render</option><option value="fantasy art">Fantasy</option><option value="watercolor">Watercolor</option><option value="cyberpunk">Cyberpunk</option><option value="minimalist">Minimal</option><option value="digital illustration">Digital illustration</option></select><i data-lucide="chevron-down" class="select-chevron"></i></div></div>
+            <div class="option-group"><label for="aspect-select">ASPECT RATIO</label><div class="select-wrap"><i data-lucide="rectangle-horizontal"></i><select id="aspect-select" name="aspectRatio"><option value="1024x1024">Square · 1:1</option><option value="1536x1024">Landscape · 3:2</option><option value="1024x1536">Portrait · 2:3</option></select><i data-lucide="chevron-down" class="select-chevron"></i></div></div>
+            <div class="option-group"><label for="quality-select">QUALITY</label><div class="select-wrap"><i data-lucide="sliders-horizontal"></i><select id="quality-select" name="quality"><option value="standard">Standard</option><option value="high">High detail</option></select><i data-lucide="chevron-down" class="select-chevron"></i></div></div>
+            <button class="generate-btn" id="generate-button" type="submit"><i data-lucide="sparkles"></i><span>Generate image</span><i data-lucide="arrow-up-right" class="generate-arrow"></i></button>
+          </div>
+          <p class="form-note"><i data-lucide="info"></i> AI generation requires a configured server-side provider. Your API key is never stored in this page.</p>
+        </form>
+        <div class="status-message" id="status-message" role="status" aria-live="polite" hidden></div>
+      </section>
+
+      <section class="section-block" id="explore">
+        <div class="section-heading gallery-heading"><div><span class="section-kicker">A LITTLE INSPIRATION</span><h2>Explore creations</h2><p class="section-description">A curated moodboard to spark your next idea.</p></div><div class="gallery-controls"><button class="filter-chip active" data-filter="all">For you</button><button class="filter-chip" data-filter="dreamy">Dreamy</button><button class="filter-chip" data-filter="nature">Nature</button><button class="filter-chip" data-filter="fantasy">Fantasy</button></div></div>
+        <div class="artwork-grid" id="artwork-grid">
+          <article class="artwork-card" data-category="dreamy"><div class="artwork-image artwork-sunset"><span class="artwork-tag">DREAMY</span><button class="favorite-btn" aria-label="Add Sunset Reverie to favorites"><i data-lucide="heart"></i></button><div class="scene-sun"></div><div class="scene-hills"></div></div><div class="artwork-meta"><div><h3>Sunset Reverie</h3><p>Pastel landscape · Concept art</p></div><button class="prompt-use" data-prompt="A dreamy pastel sunset over layered mountains and a quiet lake, soft cinematic light">Use prompt <i data-lucide="arrow-up-right"></i></button></div></article>
+          <article class="artwork-card" data-category="nature"><div class="artwork-image artwork-garden"><span class="artwork-tag">NATURE</span><button class="favorite-btn" aria-label="Add Secret Garden to favorites"><i data-lucide="heart"></i></button><div class="garden-sun"></div><div class="garden-hills"></div><div class="garden-flower flower-a">✿</div><div class="garden-flower flower-b">✿</div></div><div class="artwork-meta"><div><h3>Secret Garden</h3><p>Botanical · Illustration</p></div><button class="prompt-use" data-prompt="A secret botanical garden with tiny flowers, morning mist and sunbeams, detailed storybook illustration">Use prompt <i data-lucide="arrow-up-right"></i></button></div></article>
+          <article class="artwork-card" data-category="fantasy"><div class="artwork-image artwork-castle"><span class="artwork-tag">FANTASY</span><button class="favorite-btn" aria-label="Add Cloud Kingdom to favorites"><i data-lucide="heart"></i></button><div class="castle-moon"></div><div class="castle-shape"></div><div class="castle-cloud"></div></div><div class="artwork-meta"><div><h3>Cloud Kingdom</h3><p>Fantasy world · Matte painting</p></div><button class="prompt-use" data-prompt="An elegant fantasy castle floating above clouds at blue hour, lavender sky, glowing windows, epic matte painting">Use prompt <i data-lucide="arrow-up-right"></i></button></div></article>
+          <article class="artwork-card" data-category="dreamy"><div class="artwork-image artwork-coast"><span class="artwork-tag">COASTAL</span><button class="favorite-btn" aria-label="Add Blue Hour to favorites"><i data-lucide="heart"></i></button><div class="coast-sun"></div><div class="coast-water"></div><div class="coast-cliff"></div></div><div class="artwork-meta"><div><h3>Blue Hour</h3><p>Coastal mood · Digital art</p></div><button class="prompt-use" data-prompt="A serene coastal village at blue hour, glowing windows, reflective ocean, cinematic digital painting">Use prompt <i data-lucide="arrow-up-right"></i></button></div></article>
+        </div>
+      </section>
+
+      <section class="section-block" id="styles">
+        <div class="section-heading"><div><span class="section-kicker">FIND YOUR LOOK</span><h2>Popular styles</h2><p class="section-description">Choose a direction and make it your own.</p></div></div>
+        <div class="style-grid">
+          <button class="style-card style-anime" data-style="anime"><span class="style-art">✦</span><span><strong>Anime</strong><small>Expressive & vivid</small></span><i data-lucide="arrow-up-right"></i></button>
+          <button class="style-card style-photo" data-style="photorealistic"><span class="style-art">◉</span><span><strong>Realistic</strong><small>Natural & detailed</small></span><i data-lucide="arrow-up-right"></i></button>
+          <button class="style-card style-3d" data-style="3d render"><span class="style-art">◇</span><span><strong>3D render</strong><small>Depth & dimension</small></span><i data-lucide="arrow-up-right"></i></button>
+          <button class="style-card style-fantasy" data-style="fantasy art"><span class="style-art">✧</span><span><strong>Fantasy</strong><small>Worlds beyond</small></span><i data-lucide="arrow-up-right"></i></button>
+          <button class="style-card style-watercolor" data-style="watercolor"><span class="style-art">❋</span><span><strong>Watercolor</strong><small>Soft & painterly</small></span><i data-lucide="arrow-up-right"></i></button>
+          <button class="style-card style-cyber" data-style="cyberpunk"><span class="style-art">⌘</span><span><strong>Cyberpunk</strong><small>Future in color</small></span><i data-lucide="arrow-up-right"></i></button>
+        </div>
+      </section>
+
+      <section class="section-block history-section" id="history">
+        <div class="section-heading"><div><span class="section-kicker">YOUR CREATIVE JOURNEY</span><h2>Recent creations</h2><p class="section-description">Images you generate on this device will appear here.</p></div><button class="outline-btn" id="download-history">Export history <i data-lucide="download"></i></button></div>
+        <div class="history-grid" id="history-grid"><div class="empty-state"><span><i data-lucide="images"></i></span><strong>Your canvas is waiting</strong><p>Generate your first image and it will show up here.</p></div></div>
+      </section>
+      <footer class="footer"><a class="brand footer-brand" href="#home"><span class="brand-mark"><i data-lucide="aperture"></i></span><span>AIVISION</span></a><span>Made for the imagination.</span><a href="#create">Back to top ↑</a></footer>
+    </main>
   </div>
-
-  <!-- LOADER -->
-  <div id="loader">
-    <div class="loader-content">
-      <div class="loader-logo">ATHARV<span>.</span></div>
-      <div class="loader-text">LOADING EXPERIENCE...</div>
-
-      <div class="loader-line">
-        <div id="loader-progress"></div>
-      </div>
-
-      <div id="loader-percent">0%</div>
-    </div>
-  </div>
-
-  <!-- SCROLL PROGRESS -->
-  <div class="scroll-progress">
-    <div id="progress-bar"></div>
-  </div>
-
-  <!-- NAVBAR -->
-  <header class="navbar" id="navbar">
-    <a href="#home" class="logo">ATHARV<span>.</span></a>
-
-    <nav class="nav-links">
-      <a href="#home" class="nav-link active">Home</a>
-      <a href="#about" class="nav-link">About</a>
-      <a href="#skills" class="nav-link">Skills</a>
-      <a href="#projects" class="nav-link">Projects</a>
-      <a href="#experience" class="nav-link">Experience</a>
-      <a href="#certificates" class="nav-link">Certificates</a>
-      <a href="#contact" class="nav-link">Contact</a>
-    </nav>
-
-    <div class="nav-actions">
-      <button id="theme-toggle" class="icon-button" aria-label="Toggle theme">
-        ☼
-      </button>
-
-      <button id="menu-toggle" class="menu-button">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-    </div>
-  </header>
-
-  <!-- MOBILE MENU -->
-  <div class="mobile-menu" id="mobile-menu">
-    <a href="#home">Home</a>
-    <a href="#about">About</a>
-    <a href="#skills">Skills</a>
-    <a href="#projects">Projects</a>
-    <a href="#experience">Experience</a>
-    <a href="#certificates">Certificates</a>
-    <a href="#contact">Contact</a>
-  </div>
-
-  <main>
-
-    <!-- HERO -->
-    <section id="home" class="hero section">
-
-      <div class="hero-content reveal">
-
-        <div class="status-badge">
-          <span class="status-dot"></span>
-          AVAILABLE FOR OPPORTUNITIES
-        </div>
-
-        <p class="eyebrow">HELLO, WORLD 👋</p>
-
-        <h1>
-          Hi, I'm
-          <span class="gradient-text">Atharv.</span>
-        </h1>
-
-        <h2>
-          I'm a
-          <span id="typing-text"></span>
-          <span class="typing-cursor">|</span>
-        </h2>
-
-        <p class="hero-description">
-          Computer Engineering student passionate about building
-          beautiful digital experiences, intelligent applications
-          and modern web interfaces.
-        </p>
-
-        <div class="hero-buttons">
-          <a href="#projects" class="btn btn-primary magnetic">
-            Explore My Work
-            <span>↗</span>
-          </a>
-
-          <a href="#contact" class="btn btn-secondary magnetic">
-            Contact Me
-          </a>
-        </div>
-
-        <div class="social-links">
-          <a href="https://github.com/" target="_blank" class="social magnetic">GH</a>
-          <a href="https://linkedin.com/" target="_blank" class="social magnetic">in</a>
-          <a href="https://instagram.com/" target="_blank" class="social magnetic">IG</a>
-          <a href="mailto:your@email.com" class="social magnetic">@</a>
-        </div>
-
-      </div>
-
-      <!-- PROFILE -->
-      <div class="hero-visual reveal">
-
-        <div class="orbit orbit-one"></div>
-        <div class="orbit orbit-two"></div>
-        <div class="orbit orbit-three"></div>
-
-        <div class="profile-card tilt-card">
-
-          <div class="profile-glow"></div>
-
-          <div class="profile-image">
-            <div class="profile-placeholder">
-              <span>AB</span>
-            </div>
-          </div>
-
-          <div class="profile-info">
-            <span>Computer Engineer</span>
-            <h3>Atharv Bulkunde</h3>
-            <p>Developer • Designer • Explorer</p>
-          </div>
-
-          <div class="floating-card card-one">
-            <span>⌘</span>
-            Frontend
-          </div>
-
-          <div class="floating-card card-two">
-            <span>☁</span>
-            AI Explorer
-          </div>
-
-          <div class="floating-card card-three">
-            <span>⚡</span>
-            Java / SQL
-          </div>
-
-          <div class="floating-card card-four">
-            <span>✦</span>
-            UI Designer
-          </div>
-
-        </div>
-
-      </div>
-
-      <div class="scroll-indicator">
-        <span>SCROLL TO EXPLORE</span>
-        <div class="scroll-line"></div>
-      </div>
-
-    </section>
-
-
-    <!-- ABOUT -->
-    <section id="about" class="section">
-
-      <div class="section-heading reveal">
-        <span class="section-number">01</span>
-        <p>GET TO KNOW ME</p>
-        <h2>About <span>Me</span></h2>
-      </div>
-
-      <div class="about-grid">
-
-        <div class="about-card glass-card reveal">
-          <div class="about-image">
-            <div class="avatar-large">AB</div>
-          </div>
-
-          <div class="about-mini-info">
-            <span>Based in</span>
-            <strong>Nashik, Maharashtra 🇮🇳</strong>
-          </div>
-        </div>
-
-        <div class="about-content reveal">
-
-          <h3>
-            Turning ideas into
-            <span class="gradient-text">digital experiences.</span>
-          </h3>
-
-          <p>
-            I'm Atharv Bulkunde, a Computer Engineering student and
-            developer interested in frontend development, programming,
-            databases, UI design and emerging AI technologies.
-          </p>
-
-          <p>
-            I enjoy transforming concepts into polished applications
-            that are functional, responsive and visually engaging.
-          </p>
-
-          <div class="focus-list">
-            <div>
-              <span>01</span>
-              <strong>Current Focus</strong>
-              <p>Web Development & UI Engineering</p>
-            </div>
-
-            <div>
-              <span>02</span>
-              <strong>Learning</strong>
-              <p>Java, SQL, DBMS & AI</p>
-            </div>
-
-            <div>
-              <span>03</span>
-              <strong>Goal</strong>
-              <p>Build impactful technology</p>
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-
-      <!-- STATS -->
-      <div class="stats-grid reveal">
-
-        <div class="stat-card">
-          <strong data-count="10">0</strong>
-          <span>Projects</span>
-        </div>
-
-        <div class="stat-card">
-          <strong data-count="5">0</strong>
-          <span>Technologies</span>
-        </div>
-
-        <div class="stat-card">
-          <strong data-count="8">0</strong>
-          <span>Certificates</span>
-        </div>
-
-        <div class="stat-card">
-          <strong>100%</strong>
-          <span>Curiosity</span>
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- SKILLS -->
-    <section id="skills" class="section">
-
-      <div class="section-heading reveal">
-        <span class="section-number">02</span>
-        <p>MY TOOLKIT</p>
-        <h2>Skills & <span>Technologies</span></h2>
-      </div>
-
-      <div class="skills-grid">
-
-        <div class="skill-card glass-card reveal">
-          <div class="skill-icon">⌘</div>
-          <h3>Frontend</h3>
-
-          <div class="skill-tags">
-            <span>HTML5</span>
-            <span>CSS3</span>
-            <span>JavaScript</span>
-            <span>React</span>
-          </div>
-
-          <div class="skill-progress">
-            <span>Frontend Development</span>
-            <strong>90%</strong>
-            <div><i style="width:90%"></i></div>
-          </div>
-        </div>
-
-        <div class="skill-card glass-card reveal">
-          <div class="skill-icon">⚙</div>
-          <h3>Programming</h3>
-
-          <div class="skill-tags">
-            <span>Java</span>
-            <span>Python</span>
-            <span>C/C++</span>
-          </div>
-
-          <div class="skill-progress">
-            <span>Programming</span>
-            <strong>82%</strong>
-            <div><i style="width:82%"></i></div>
-          </div>
-        </div>
-
-        <div class="skill-card glass-card reveal">
-          <div class="skill-icon">◈</div>
-          <h3>Database</h3>
-
-          <div class="skill-tags">
-            <span>SQL</span>
-            <span>MySQL</span>
-            <span>DBMS</span>
-          </div>
-
-          <div class="skill-progress">
-            <span>Database</span>
-            <strong>85%</strong>
-            <div><i style="width:85%"></i></div>
-          </div>
-        </div>
-
-        <div class="skill-card glass-card reveal">
-          <div class="skill-icon">✦</div>
-          <h3>Tools & Design</h3>
-
-          <div class="skill-tags">
-            <span>Git</span>
-            <span>GitHub</span>
-            <span>VS Code</span>
-            <span>Figma</span>
-            <span>UI/UX</span>
-          </div>
-
-          <div class="skill-progress">
-            <span>Tools & Design</span>
-            <strong>88%</strong>
-            <div><i style="width:88%"></i></div>
-          </div>
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- PROJECTS -->
-    <section id="projects" class="section">
-
-      <div class="section-heading reveal">
-        <span class="section-number">03</span>
-        <p>SELECTED WORK</p>
-        <h2>Featured <span>Projects</span></h2>
-      </div>
-
-      <div class="projects-grid">
-
-        <article class="project-card project-tall reveal tilt-card"
-          data-title="Weather Dashboard"
-          data-description="A responsive live weather dashboard using API integration with dynamic weather information."
-          data-tech="HTML,CSS,JavaScript,API">
-
-          <div class="project-image project-weather">
-            <span>☁</span>
-          </div>
-
-          <div class="project-content">
-            <div class="project-number">01</div>
-            <h3>Weather Dashboard</h3>
-            <p>Live weather application with API-powered data.</p>
-
-            <div class="tags">
-              <span>JavaScript</span>
-              <span>API</span>
-              <span>CSS</span>
-            </div>
-
-            <button class="view-project">View Project ↗</button>
-          </div>
-        </article>
-
-
-        <article class="project-card reveal tilt-card"
-          data-title="LUXE E-Commerce"
-          data-description="Modern premium e-commerce interface with product filtering, shopping cart and checkout preview."
-          data-tech="HTML,CSS,JavaScript">
-
-          <div class="project-image project-shop">
-            <span>◈</span>
-          </div>
-
-          <div class="project-content">
-            <div class="project-number">02</div>
-            <h3>LUXE Store</h3>
-            <p>Interactive premium e-commerce experience.</p>
-
-            <div class="tags">
-              <span>HTML</span>
-              <span>CSS</span>
-              <span>JS</span>
-            </div>
-
-            <button class="view-project">View Project ↗</button>
-          </div>
-        </article>
-
-
-        <article class="project-card project-wide reveal tilt-card"
-          data-title="AI Image Generator"
-          data-description="Futuristic image generation interface designed for AI-powered creative workflows."
-          data-tech="JavaScript,API,AI,UI">
-
-          <div class="project-image project-ai">
-            <span>✦</span>
-          </div>
-
-          <div class="project-content">
-            <div class="project-number">03</div>
-            <h3>AI Image Generator</h3>
-            <p>Creative AI generation interface.</p>
-
-            <div class="tags">
-              <span>AI</span>
-              <span>API</span>
-              <span>UI</span>
-            </div>
-
-            <button class="view-project">View Project ↗</button>
-          </div>
-        </article>
-
-
-        <article class="project-card reveal tilt-card"
-          data-title="Smart Todo"
-          data-description="Interactive task management application using DOM manipulation and LocalStorage."
-          data-tech="HTML,CSS,JavaScript,LocalStorage">
-
-          <div class="project-image project-todo">
-            <span>✓</span>
-          </div>
-
-          <div class="project-content">
-            <div class="project-number">04</div>
-            <h3>Smart Todo</h3>
-            <p>Persistent task manager with local storage.</p>
-
-            <div class="tags">
-              <span>JavaScript</span>
-              <span>LocalStorage</span>
-            </div>
-
-            <button class="view-project">View Project ↗</button>
-          </div>
-        </article>
-
-
-        <article class="project-card reveal tilt-card"
-          data-title="Bus Management System"
-          data-description="A management system project focused on routes, passengers, scheduling and risk analysis."
-          data-tech="Java,DBMS,SQL">
-
-          <div class="project-image project-bus">
-            <span>▣</span>
-          </div>
-
-          <div class="project-content">
-            <div class="project-number">05</div>
-            <h3>Bus Management</h3>
-            <p>Database-driven transportation management concept.</p>
-
-            <div class="tags">
-              <span>DBMS</span>
-              <span>SQL</span>
-              <span>Java</span>
-            </div>
-
-            <button class="view-project">View Project ↗</button>
-          </div>
-        </article>
-
-
-        <article class="project-card reveal tilt-card"
-          data-title="Music Player"
-          data-description="Glassmorphism music player interface with modern controls and responsive design."
-          data-tech="HTML,CSS,JavaScript">
-
-          <div class="project-image project-music">
-            <span>♫</span>
-          </div>
-
-          <div class="project-content">
-            <div class="project-number">06</div>
-            <h3>Music Player</h3>
-            <p>Futuristic glassmorphism music interface.</p>
-
-            <div class="tags">
-              <span>UI</span>
-              <span>JavaScript</span>
-            </div>
-
-            <button class="view-project">View Project ↗</button>
-          </div>
-        </article>
-
-      </div>
-
-    </section>
-
-
-    <!-- EXPERIENCE -->
-    <section id="experience" class="section">
-
-      <div class="section-heading reveal">
-        <span class="section-number">04</span>
-        <p>MY JOURNEY</p>
-        <h2>Experience & <span>Education</span></h2>
-      </div>
-
-      <div class="timeline">
-
-        <div class="timeline-line"></div>
-
-        <div class="timeline-item reveal">
-          <div class="timeline-dot"></div>
-
-          <div class="timeline-card">
-            <span class="timeline-date">2025 — PRESENT</span>
-            <h3>Computer Engineering</h3>
-            <h4>Matoshri College of Engineering</h4>
-            <p>
-              Building foundations in computer engineering,
-              programming, databases and software development.
-            </p>
-          </div>
-        </div>
-
-
-        <div class="timeline-item right reveal">
-          <div class="timeline-dot"></div>
-
-          <div class="timeline-card">
-            <span class="timeline-date">2026</span>
-            <h3>Web Development</h3>
-            <h4>Project Journey</h4>
-            <p>
-              Developed multiple responsive web applications
-              using HTML, CSS and JavaScript.
-            </p>
-          </div>
-        </div>
-
-
-        <div class="timeline-item reveal">
-          <div class="timeline-dot"></div>
-
-          <div class="timeline-card">
-            <span class="timeline-date">2026</span>
-            <h3>Internship Projects</h3>
-            <h4>Frontend Development</h4>
-            <p>
-              Completed practical projects including portfolios,
-              dashboards, e-commerce applications and interactive UI.
-            </p>
-          </div>
-        </div>
-
-
-        <div class="timeline-item right reveal">
-          <div class="timeline-dot"></div>
-
-          <div class="timeline-card">
-            <span class="timeline-date">ONGOING</span>
-            <h3>Continuous Learning</h3>
-            <h4>AI • Java • SQL • UI/UX</h4>
-            <p>
-              Exploring modern technologies and developing
-              production-style projects.
-            </p>
-          </div>
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- CERTIFICATES -->
-    <section id="certificates" class="section">
-
-      <div class="section-heading reveal">
-        <span class="section-number">05</span>
-        <p>ACHIEVEMENTS</p>
-        <h2>My <span>Certificates</span></h2>
-      </div>
-
-      <div class="certificate-grid">
-
-        <div class="certificate-card glass-card reveal">
-          <div class="certificate-preview">
-            <span>🏆</span>
-          </div>
-
-          <div>
-            <span class="certificate-type">CERTIFICATE</span>
-            <h3>Web Development</h3>
-            <p>Frontend Development</p>
-            <button class="certificate-btn">View Certificate</button>
-          </div>
-        </div>
-
-
-        <div class="certificate-card glass-card reveal">
-          <div class="certificate-preview">
-            <span>⚡</span>
-          </div>
-
-          <div>
-            <span class="certificate-type">CERTIFICATE</span>
-            <h3>Java Programming</h3>
-            <p>Programming Fundamentals</p>
-            <button class="certificate-btn">View Certificate</button>
-          </div>
-        </div>
-
-
-        <div class="certificate-card glass-card reveal">
-          <div class="certificate-preview">
-            <span>◈</span>
-          </div>
-
-          <div>
-            <span class="certificate-type">CERTIFICATE</span>
-            <h3>SQL & DBMS</h3>
-            <p>Database Management</p>
-            <button class="certificate-btn">View Certificate</button>
-          </div>
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- CONTACT -->
-    <section id="contact" class="section contact-section">
-
-      <div class="contact-card reveal">
-
-        <div class="contact-decoration"></div>
-
-        <span class="section-number">06</span>
-
-        <p class="eyebrow">HAVE A PROJECT?</p>
-
-        <h2>
-          Let's Build Something
-          <span class="gradient-text">Amazing.</span>
-        </h2>
-
-        <p>
-          Have an idea, internship opportunity or collaboration
-          in mind? Let's create something meaningful together.
-        </p>
-
-        <div class="contact-buttons">
-
-          <a href="mailto:your@email.com" class="btn btn-primary magnetic">
-            Send Message
-            <span>↗</span>
-          </a>
-
-          <a href="https://github.com/" target="_blank" class="btn btn-secondary magnetic">
-            GitHub
-          </a>
-
-        </div>
-
-      </div>
-
-    </section>
-
-  </main>
-
-
-  <!-- FOOTER -->
-  <footer>
-
-    <div class="footer-glow"></div>
-
-    <div class="footer-content">
-
-      <div>
-        <div class="footer-logo">ATHARV<span>.</span></div>
-        <p>Building ideas into digital experiences.</p>
-      </div>
-
-      <div class="footer-links">
-        <a href="#home">Home</a>
-        <a href="#projects">Projects</a>
-        <a href="#contact">Contact</a>
-      </div>
-
-      <div class="footer-copy">
-        © 2026 Atharv Bulkunde
-      </div>
-
-    </div>
-
-  </footer>
-
-
-  <!-- PROJECT MODAL -->
-  <div class="modal" id="project-modal">
-
-    <div class="modal-backdrop"></div>
-
-    <div class="modal-content">
-
-      <button class="modal-close">&times;</button>
-
-      <div class="modal-visual">
-        <span id="modal-icon">✦</span>
-      </div>
-
-      <div class="modal-info">
-
-        <span class="modal-label">PROJECT</span>
-
-        <h2 id="modal-title">Project</h2>
-
-        <p id="modal-description"></p>
-
-        <div id="modal-tags" class="tags"></div>
-
-        <div class="modal-actions">
-          <a href="#" class="btn btn-primary">GitHub ↗</a>
-          <a href="#" class="btn btn-secondary">Live Demo ↗</a>
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- BACK TO TOP -->
-  <button id="back-top" class="back-top">↑</button>
-
-  <script src="script.js"></script>
-
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="modal-backdrop" id="image-modal" hidden><div class="image-modal glass" role="dialog" aria-modal="true" aria-labelledby="modal-title"><button class="icon-btn modal-close" id="close-modal" aria-label="Close image preview"><i data-lucide="x"></i></button><h2 id="modal-title">Your creation</h2><img id="modal-image" alt="Generated artwork"><div class="modal-actions"><button class="outline-btn" id="modal-download"><i data-lucide="download"></i> Download image</button><button class="generate-btn" id="modal-regenerate"><i data-lucide="refresh-cw"></i> Try another</button></div></div></div>
 </body>
 </html>
