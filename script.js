@@ -108,15 +108,15 @@
   function applyGalleryFilters() {
     const filter = $(".filter-chip.active")?.dataset.filter || "all";
     const query = ($("#gallery-search")?.value || "").trim().toLowerCase();
-    $(".artwork-card").forEach(card => {
+    $$(".artwork-card").forEach(card => {
       const categoryMatch = filter === "all" || card.dataset.category === filter;
       const textMatch = !query || card.textContent.toLowerCase().includes(query) || ($(".prompt-use", card)?.dataset.prompt || "").toLowerCase().includes(query);
       card.hidden = !(categoryMatch && textMatch);
     });
   }
   function initFilters() {
-    $(".filter-chip").forEach(button => button.addEventListener("click", () => {
-      $(".filter-chip").forEach(item => item.classList.toggle("active", item === button));
+    $$(".filter-chip").forEach(button => button.addEventListener("click", () => {
+      $$(".filter-chip").forEach(item => item.classList.toggle("active", item === button));
       applyGalleryFilters();
     }));
     $("#gallery-search")?.addEventListener("input", applyGalleryFilters);
