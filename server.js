@@ -215,13 +215,26 @@ app.get("/generated/:filename", requireSession, async (req, res) => {
   }
 });
 
-app.use(express.static(__dirname, {
-  index: "index.html",
-  dotfiles: "ignore",
-  setHeaders(res, filePath) {
-    if (path.basename(filePath) === "index.html") res.setHeader("Cache-Control", "no-cache");
-  }
-}));
+// Serve only the public frontend assets; never expose server.js, package files, or environment templates.
+app.get("/", (_req, res) => {
+  res.setHeader("Cache-Control", "no-cache");
+  res.sendFile(path.join(__dirname, "index.html"));
+});
+app.get("/index.html", (_req, res) => {
+  res.setHeader("Cache-Control", "no-cache");
+  res.sendFile(path.join(__dirname, "index.html"));
+});
+app.get("/style.css", (_req, res) => {
+  res.setHeader("Cache-Control", "public, max-age=300");
+  res.sendFile(path.join(__dirname, "style.css"));
+});
+app.get("/script.js", (_req, res) => {
+  res.setHeader("Cache-Control", "no-cache");
+  res.sendFile(path.join(__dirname, "script.js"));
+});
+app.use((req, res) => {
+  res.status(404).json({ error: "Route not found." });
+});
 app.use((error, _req, res, _next) => {
   if (error?.type === "entity.too.large") return res.status(413).json({ error: "Request body is too large." });
   if (error instanceof SyntaxError && "body" in error) return res.status(400).json({ error: "Invalid JSON request body." });
