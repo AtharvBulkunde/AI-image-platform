@@ -5,6 +5,7 @@
   const STORAGE = { theme: "aivision-theme", favorites: "aivision-favorites", history: "aivision-history" };
   let lastPrompt = "";
   let toastTimer;
+  let authResolver = null;
 
   function readStore(key, fallback) {
     try { const value = localStorage.getItem(key); return value ? JSON.parse(value) : fallback; }
@@ -104,12 +105,21 @@
     $("#prompt").focus({ preventScroll: true });
     showToast("Style selected: " + (option ? option.textContent : style));
   }
+  function applyGalleryFilters() {
+    const filter = $(".filter-chip.active")?.dataset.filter || "all";
+    const query = ($("#gallery-search")?.value || "").trim().toLowerCase();
+    $$(".artwork-card").forEach(card => {
+      const categoryMatch = filter === "all" || card.dataset.category === filter;
+      const textMatch = !query || card.textContent.toLowerCase().includes(query) || ($(".prompt-use", card)?.dataset.prompt || "").toLowerCase().includes(query);
+      card.hidden = !(categoryMatch && textMatch);
+    });
+  }
   function initFilters() {
     $$(".filter-chip").forEach(button => button.addEventListener("click", () => {
       $$(".filter-chip").forEach(item => item.classList.toggle("active", item === button));
-      const filter = button.dataset.filter;
-      $$(".artwork-card").forEach(card => card.hidden = filter !== "all" && card.dataset.category !== filter);
+      applyGalleryFilters();
     }));
+    $("#gallery-search")?.addEventListener("input", applyGalleryFilters);
   }
   function initFavorites() {
     const favorites = new Set(readStore(STORAGE.favorites, []));
@@ -129,6 +139,17 @@
       });
     });
   }
+  function requestStudioLogin() {
+    const modal = $("#auth-modal");
+    const passwordInput = $("#auth-password");
+    const error = $("#auth-error");
+    error.hidden = true;
+    passwordInput.value = "";
+    modal.hidden = false;
+    refreshIcons();
+    setTimeout(() => passwordInput.focus(), 30);
+    return new Promise(resolve => { authResolver = resolve; });
+  }
   async function submitGeneration(event) {
     event.preventDefault();
     const promptInput = $("#prompt");
@@ -145,31 +166,35 @@
     };
     lastPrompt = prompt;
     button.disabled = true;
-    button.innerHTML = '<i data-lucide="loader-circle"></i><span>Preparing...</span>';
+    button.innerHTML = '<i data-lucide="loader-circle"></i><span>Creating your image...</span>';
     refreshIcons();
-    setStatus("Checking the image-generation service…");
+    setStatus("Preparing your image. This can take a little while…");
     try {
-      const configuredEndpoint = document.querySelector('meta[name="aivision-api-endpoint"]')?.content?.trim();
-      const endpoint = configuredEndpoint || "/api/images/generate";
-      const response = await fetch(endpoint, {
+      const sendGeneration = () => fetch("/api/images/generate", {
         method: "POST",
+        credentials: "same-origin",
         headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body: JSON.stringify(payload)
       });
-      const data = await response.json().catch(() => ({}));
-      if (!response.ok) {
-        if (response.status === 404 || response.status === 501) throw new Error("The AI backend is not connected yet. Add a secure server endpoint at POST /api/images/generate to enable real image generation.");
-        throw new Error(data.error || data.message || "The image service returned an error (" + response.status + ").");
+      let response = await sendGeneration();
+      if (response.status === 401) {
+        setStatus("Unlock your private studio to continue.");
+        const unlocked = await requestStudioLogin();
+        if (!unlocked) throw new Error("Studio sign-in was cancelled.");
+        setStatus("You're signed in. Creating your image…");
+        response = await sendGeneration();
       }
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.error || "The image service returned an error (" + response.status + ").");
       const imageUrl = data.imageUrl || data.url || data.image?.url || data.data?.[0]?.url;
-      if (!imageUrl) throw new Error("The server responded, but no image URL was returned. Check your AI provider adapter.");
-      saveHistory({ url: imageUrl, prompt, style: payload.style, createdAt: new Date().toISOString() });
+      if (!imageUrl) throw new Error("The server responded, but no image URL was returned.");
+      saveHistory({ url: imageUrl, prompt, style: payload.style, createdAt: data.createdAt || new Date().toISOString() });
       setStatus("Your image is ready! It has been added to Recent creations.", "success");
       openModal(imageUrl, prompt);
       showToast("Image generated successfully.");
     } catch (error) {
       setStatus(error.message || "Could not connect to the image service. Please try again.", "error");
-      showToast("Image generation needs a configured AI backend.");
+      showToast(error.message === "Studio sign-in was cancelled." ? "Sign-in cancelled." : "Could not generate image.");
     } finally {
       button.disabled = false;
       button.innerHTML = original;
@@ -187,6 +212,42 @@
     const count = $("#prompt-count");
     prompt.addEventListener("input", () => { count.textContent = prompt.value.length + " / 1200"; });
     $("#generate-form").addEventListener("submit", submitGeneration);
+
+    $("#auth-form").addEventListener("submit", async event => {
+      event.preventDefault();
+      const submit = $("#auth-submit");
+      const error = $("#auth-error");
+      const password = $("#auth-password").value;
+      submit.disabled = true;
+      submit.innerHTML = '<i data-lucide="loader-circle"></i> Checking…';
+      error.hidden = true;
+      refreshIcons();
+      try {
+        const response = await fetch("/api/auth/login", {
+          method: "POST",
+          credentials: "same-origin",
+          headers: { "Content-Type": "application/json", "Accept": "application/json" },
+          body: JSON.stringify({ password })
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.error || "Could not unlock the studio.");
+        $("#auth-modal").hidden = true;
+        if (authResolver) { const resolve = authResolver; authResolver = null; resolve(true); }
+      } catch (err) {
+        error.textContent = err.message || "Sign-in failed.";
+        error.hidden = false;
+        $("#auth-password").select();
+      } finally {
+        submit.disabled = false;
+        submit.innerHTML = '<i data-lucide="lock-keyhole"></i> Unlock studio';
+        refreshIcons();
+      }
+    });
+    $("#auth-cancel").addEventListener("click", () => {
+      $("#auth-modal").hidden = true;
+      if (authResolver) { const resolve = authResolver; authResolver = null; resolve(false); }
+    });
+
     $("#enhance-prompt").addEventListener("click", () => {
       const input = $("#prompt");
       const value = input.value.trim();
@@ -225,7 +286,7 @@
     $("#profile-button").addEventListener("click", () => showToast("Profile and sign-in require backend authentication."));
     $("#close-modal").addEventListener("click", closeModal);
     $("#image-modal").addEventListener("click", event => { if (event.target === $("#image-modal")) closeModal(); });
-    document.addEventListener("keydown", event => { if (event.key === "Escape") { closeModal(); $("#sidebar").classList.remove("open"); } });
+    document.addEventListener("keydown", event => { if (event.key === "Escape") { closeModal(); $("#sidebar").classList.remove("open"); if (!$("#auth-modal").hidden) $("#auth-cancel").click(); } });
     $("#modal-download").addEventListener("click", () => { const image = $("#modal-image"); if (image.src) downloadImage(image.src, "aivision-artwork.png"); });
     $("#modal-regenerate").addEventListener("click", () => { closeModal(); $("#prompt").value = lastPrompt || $("#prompt").value; $("#prompt").focus(); $("#create").scrollIntoView({ behavior: "smooth" }); showToast("Edit your prompt or generate again."); });
     $("#explore").setAttribute("aria-label", "Explore curated artwork inspiration");
